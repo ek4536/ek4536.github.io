@@ -1,0 +1,18 @@
+# System
+.DS_Store
+Thumbs.db
+
+# Resume drafts — keep only what you intentionally want public
+# (remove the line below if you want to publish your resume PDF)
+EunjiKim_Resume_1page.pdf
+EunjiKim_Resume_2page.pdf
+Resume_2026.05.pdf
+
+# Project subfolders are separate repos — don't nest them here
+202512_NYC Playbook/
+202604_Convertshare/
+202605_Energy Burden Prediction/
+202605_Cool Roofs/
+
+# Misc
+*.log
