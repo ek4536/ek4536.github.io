@@ -3,361 +3,264 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eunji Kim — Urban Data Scientist</title>
+  <title>Eunji Kim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
   <style>
     :root {
-      --bg: #f9f8f6;
-      --text: #1a1a1a;
-      --accent: #2d6a4f;
-      --accent-light: #d8f3dc;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --card: #ffffff;
-      --tag-bg: #f0fdf4;
-      --tag-border: #86efac;
+      --forest: #1a3d2b;
+      --moss:   #2d6a4f;
+      --fern:   #40916c;
+      --sage:   #74c69d;
+      --mist:   #d8f3dc;
+      --cream:  #f7f5f0;
+      --paper:  #fdfcf8;
+      --ink:    #1c1c1c;
+      --stone:  #6b7280;
+      --border: #e2ede6;
+      --seoul:  #b45309;   /* warm amber for Seoul phase */
+      --nyc:    #2d6a4f;   /* forest green for NYC phase */
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.7; font-weight: 300; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(249,248,246,0.93); backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0.9rem 6%;
+      padding: 1.2rem 6%;
+      background: rgba(253,252,248,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    nav .logo { font-size: 1rem; font-weight: bold; letter-spacing: 0.05em; color: var(--accent); }
-    nav ul { list-style: none; display: flex; gap: 2rem; }
-    nav ul a {
-      text-decoration: none; font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.82rem; color: var(--muted); letter-spacing: 0.06em;
-      text-transform: uppercase; transition: color 0.2s;
-    }
-    nav ul a:hover { color: var(--accent); }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--forest); }
+    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+    nav a { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--moss); }
 
-    /* LAYOUT */
-    .wrapper { max-width: 920px; margin: 0 auto; padding: 5rem 5%; }
+    /* ── LAYOUT ── */
+    .section { max-width: 860px; margin: 0 auto; padding: 7rem 5% 4rem; }
+    .section:first-of-type { padding-top: 10rem; }
+    .label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fern); margin-bottom: 0.6rem; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; font-weight: normal; color: var(--forest); margin-bottom: 2.5rem; line-height: 1.2; }
+    h2::after { content: ''; display: block; width: 40px; height: 2px; background: var(--sage); margin-top: 0.8rem; }
 
-    /* SECTION LABELS */
-    .section-label {
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem;
-      text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent);
-      margin-bottom: 0.4rem;
-    }
-    h2 {
-      font-size: 2rem; font-weight: normal; margin-bottom: 2.5rem;
-      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
-    }
+    /* ── HERO ── */
+    #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 6rem; }
+    #hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(3rem, 6.5vw, 5rem); font-weight: normal; line-height: 1.1; color: var(--forest); margin-bottom: 1.8rem; }
+    #hero h1 em { font-style: italic; color: var(--fern); }
+    #hero p { font-size: 1.05rem; color: var(--stone); max-width: 520px; line-height: 1.8; margin-bottom: 3rem; }
+    .btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 1.8rem; border-radius: 2px; transition: all 0.2s; }
+    .btn-fill { background: var(--forest); color: #fff; }
+    .btn-fill:hover { background: var(--moss); }
+    .btn-ghost { border: 1px solid var(--moss); color: var(--moss); }
+    .btn-ghost:hover { background: var(--mist); }
 
-    /* HERO */
-    #hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding-top: 6rem; }
-    #hero .eyebrow {
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem;
-      text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 1.2rem;
-    }
-    #hero h1 { font-size: clamp(2.8rem, 6vw, 4.5rem); font-weight: normal; line-height: 1.15; margin-bottom: 1.5rem; }
-    #hero h1 span { color: var(--accent); }
-    #hero p { font-size: 1.1rem; color: var(--muted); max-width: 560px; margin-bottom: 2.5rem; }
-    .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn {
-      display: inline-block; padding: 0.7rem 1.6rem; border-radius: 4px;
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.82rem;
-      text-decoration: none; letter-spacing: 0.05em; transition: all 0.2s;
-    }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #1e4d38; }
-    .btn-outline { border: 1.5px solid var(--accent); color: var(--accent); }
-    .btn-outline:hover { background: var(--accent-light); }
+    /* ── ABOUT ── */
+    #about p { font-size: 1rem; color: #374151; line-height: 1.9; max-width: 680px; margin-bottom: 1.1rem; }
 
-    /* ABOUT */
-    #about p { font-size: 1.05rem; color: #374151; max-width: 700px; margin-bottom: 1rem; }
+    /* ── EXPERIENCE ── */
+    .tl { display: flex; flex-direction: column; gap: 2.8rem; }
+    .tl-row { display: grid; grid-template-columns: 130px 1fr; gap: 2rem; }
+    .tl-date { font-size: 0.75rem; color: var(--stone); text-align: right; padding-top: 0.25rem; line-height: 1.5; }
+    .tl-body h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.1rem; color: var(--forest); }
+    .tl-body .co { font-size: 0.82rem; color: var(--fern); margin-bottom: 0.6rem; }
+    .tl-body ul { padding-left: 1rem; }
+    .tl-body li { font-size: 0.88rem; color: #4b5563; margin-bottom: 0.3rem; line-height: 1.6; }
 
-    /* EXPERIENCE TIMELINE */
-    .timeline { display: flex; flex-direction: column; gap: 2.5rem; }
-    .tl-item { display: grid; grid-template-columns: 150px 1fr; gap: 1.5rem; }
-    .tl-date { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; color: var(--muted); padding-top: 0.25rem; text-align: right; }
-    .tl-body h3 { font-size: 1.05rem; margin-bottom: 0.15rem; }
-    .tl-body .company { font-family: 'Helvetica Neue', sans-serif; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem; }
-    .tl-body ul { padding-left: 1.1rem; }
-    .tl-body ul li { font-size: 0.9rem; color: #374151; margin-bottom: 0.3rem; }
+    /* ── PROJECTS ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.2rem; }
+    .card { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: box-shadow 0.25s, transform 0.25s; display: flex; flex-direction: column; }
+    .card:hover { box-shadow: 0 6px 24px rgba(26,61,43,0.1); transform: translateY(-3px); }
+    .card-date { font-size: 0.68rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .card h3 { font-size: 0.98rem; font-weight: 500; color: var(--forest); margin-bottom: 0.6rem; }
+    .card p { font-size: 0.85rem; color: #4b5563; line-height: 1.7; flex: 1; margin-bottom: 1.2rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+    .tag { font-size: 0.67rem; font-weight: 500; background: #e8f5ee; border: 1px solid #b7e4c7; color: var(--moss); padding: 0.15rem 0.5rem; border-radius: 2px; letter-spacing: 0.04em; }
+    .badge { display: inline-block; font-size: 0.67rem; font-weight: 500; background: #fef9c3; border: 1px solid #fde047; color: #713f12; padding: 0.15rem 0.5rem; border-radius: 2px; margin-bottom: 0.6rem; }
+    .card-link { font-size: 0.75rem; font-weight: 500; color: var(--moss); text-decoration: none; border-bottom: 1px solid var(--sage); padding-bottom: 1px; }
+    .card-link:hover { color: var(--forest); border-color: var(--forest); }
 
-    /* PROJECTS */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .project-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      padding: 1.8rem; transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column;
-    }
-    .project-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
-    .proj-date { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
-    .project-card h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
-    .project-card p { font-size: 0.88rem; color: #374151; margin-bottom: 1.2rem; flex: 1; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-    .tag { font-family: 'Helvetica Neue', sans-serif; font-size: 0.7rem; background: var(--tag-bg); border: 1px solid var(--tag-border); color: var(--accent); padding: 0.18rem 0.55rem; border-radius: 999px; }
-    .proj-link { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--tag-border); padding-bottom: 1px; transition: border-color 0.2s; margin-top: auto; }
-    .proj-link:hover { border-color: var(--accent); }
-    .award-badge { display: inline-block; font-family: 'Helvetica Neue', sans-serif; font-size: 0.7rem; background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 0.18rem 0.55rem; border-radius: 999px; margin-bottom: 0.5rem; }
+    /* ── VIZ WRAPPER ── */
+    .viz-wrap { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-bottom: 1.2rem; position: relative; overflow: hidden; }
+    .viz-title { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fern); margin-bottom: 0.25rem; }
+    .viz-desc { font-size: 0.82rem; color: var(--stone); margin-bottom: 1.5rem; }
+    .viz-wrap svg { display: block; width: 100%; }
+    .tip { position: absolute; pointer-events: none; opacity: 0; background: var(--paper); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.75rem; font-size: 0.76rem; color: var(--ink); line-height: 1.5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-width: 200px; transition: opacity 0.15s; z-index: 10; }
 
-    /* EDUCATION */
-    .edu-grid { display: flex; flex-direction: column; gap: 1.2rem; }
-    .edu-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      padding: 1.3rem 1.6rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;
-    }
-    .edu-card h3 { font-size: 0.98rem; margin-bottom: 0.2rem; }
-    .edu-card .degree { font-size: 0.88rem; color: var(--muted); }
-    .edu-card .gpa { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--tag-border); padding: 0.18rem 0.6rem; border-radius: 999px; }
-    .edu-card .year { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
+    /* ── CITY LEGEND ── */
+    .city-legend { display: flex; gap: 2rem; margin-bottom: 1.5rem; }
+    .city-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--stone); }
+    .city-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-    /* AWARDS */
-    .awards-list { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 2rem; }
-    .award-item { display: flex; align-items: center; gap: 0.8rem; font-size: 0.93rem; }
-    .award-item::before { content: "★"; color: var(--accent); flex-shrink: 0; }
+    /* ── SKILLS GRID ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+    .skill-cat { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; }
+    .skill-cat-title { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.1rem; }
+    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+    .skill-row:last-child { border-bottom: none; }
+    .skill-name { font-size: 0.84rem; color: var(--ink); font-weight: 400; }
+    .skill-dots { display: flex; gap: 3px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .dot.filled { opacity: 1; }
+    .dot.empty { opacity: 0.2; }
 
-    /* CONTACT */
-    #contact { text-align: center; }
-    #contact p { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; }
-    .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
-    .contact-links a {
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.85rem; color: var(--accent);
-      text-decoration: none; border-bottom: 1px solid var(--tag-border); padding-bottom: 2px; transition: border-color 0.2s;
-    }
-    .contact-links a:hover { border-color: var(--accent); }
+    /* ── CONTACT ── */
+    #contact { text-align: center; padding-bottom: 8rem; }
+    #contact h2::after { margin: 0.8rem auto 0; }
+    #contact p { font-size: 1rem; color: var(--stone); margin-bottom: 2.5rem; }
+    .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .contact-links a { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--moss); text-decoration: none; border-bottom: 1px solid var(--sage); padding-bottom: 2px; transition: all 0.2s; }
+    .contact-links a:hover { color: var(--forest); border-color: var(--forest); }
 
-    /* D3 SECTIONS */
-    .d3-section {
-      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-      padding: 2rem; margin-bottom: 2rem; overflow: hidden; position: relative;
-    }
-    .d3-section h3 { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.3rem; }
-    .d3-section p.d3-desc { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .d3-section svg { display: block; width: 100%; }
+    footer { text-align: center; padding: 1.5rem; font-size: 0.72rem; color: var(--stone); border-top: 1px solid var(--border); }
 
-    /* MAP TOOLTIP */
-    .map-tooltip {
-      position: absolute; pointer-events: none;
-      background: rgba(255,255,255,0.97); border: 1px solid var(--border);
-      border-radius: 6px; padding: 0.5rem 0.8rem;
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem;
-      color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      opacity: 0; transition: opacity 0.15s; max-width: 220px; line-height: 1.5; z-index: 10;
-    }
-
-    /* Skills legend */
-    .skill-legend { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
-    .skill-legend-item { display: flex; align-items: center; gap: 0.35rem; font-family: 'Helvetica Neue', sans-serif; font-size: 0.75rem; color: var(--muted); }
-    .skill-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-    footer { text-align: center; padding: 1.5rem; font-family: 'Helvetica Neue', sans-serif; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); }
-
-    @media (max-width: 600px) {
-      nav ul { gap: 1rem; }
-      .tl-item { grid-template-columns: 1fr; gap: 0.3rem; }
+    @media (max-width: 620px) {
+      nav ul { gap: 1.2rem; }
+      .tl-row { grid-template-columns: 1fr; gap: 0.3rem; }
       .tl-date { text-align: left; }
+      .skills-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">EJ Kim</div>
+  <div class="nav-logo">Eunji Kim</div>
   <ul>
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Work</a></li>
     <li><a href="#projects">Projects</a></li>
-    <li><a href="#data-viz">Data</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<div class="wrapper" id="hero">
-  <div class="eyebrow">Urban Data Scientist &amp; Licensed Architect</div>
-  <h1>Eunji Kim<br><span>Spatial thinking,</span><br>data-driven.</h1>
-  <p>I bridge architecture and data science — turning spatial complexity into measurable insight. Currently pursuing MS in Urban Data Science at NYU Tandon (GPA 3.9).</p>
-  <div class="btn-row">
-    <a href="#projects" class="btn btn-primary">View Projects</a>
-    <a href="https://linkedin.com/in/ejkimm" target="_blank" class="btn btn-outline">LinkedIn</a>
-    <a href="https://github.com/ek4536" target="_blank" class="btn btn-outline">GitHub</a>
+<!-- ── HERO ── -->
+<div class="section" id="hero">
+  <div class="label">Urban Data Scientist · Licensed Architect</div>
+  <h1>Spatial thinking,<br><em>data-driven.</em></h1>
+  <p>I bridge architecture and data science — turning spatial complexity into measurable insight. MS Urban Data Science at NYU Tandon (GPA 3.9).</p>
+  <div class="btns">
+    <a href="#projects" class="btn btn-fill">View Projects</a>
+    <a href="https://linkedin.com/in/ejkimm" target="_blank" class="btn btn-ghost">LinkedIn</a>
+    <a href="https://github.com/ek4536" target="_blank" class="btn btn-ghost">GitHub</a>
   </div>
 </div>
 
-<!-- ABOUT -->
-<div class="wrapper" id="about">
-  <div class="section-label">About</div>
-  <h2>Background</h2>
-  <p>I started as a licensed architect in Seoul, designing large-scale commercial and logistics projects at Gansam Architects &amp; Partners. That foundation gave me a deep intuition for the built environment — but I wanted to work at a larger scale, with data.</p>
-  <p>At Coupang, I applied geospatial analysis to optimize a network of 400+ last-mile delivery nodes across South Korea, scaling service coverage by 200% and generating $75K in annual cost savings. Now at NYU, I'm combining machine learning, GIS, and urban theory to tackle city-scale challenges.</p>
-  <p>I'm drawn to questions where space, people, and data intersect: housing conversion, energy equity, logistics infrastructure, and urban heat.</p>
+<!-- ── DATA VIZ ── -->
+<div class="section" id="viz">
+  <div class="viz-wrap">
+    <div class="city-legend">
+      <div class="city-item"><div class="city-dot" style="background:#b45309"></div>Seoul — Architecture & Logistics</div>
+      <div class="city-item"><div class="city-dot" style="background:#2d6a4f"></div>New York — Urban Data Science</div>
+    </div>
+    <div class="tip" id="map-tip"></div>
+    <svg id="world-map" viewBox="0 0 760 300"></svg>
+    <svg id="tl" viewBox="0 0 760 160" style="margin-top:0.5rem;"></svg>
+  </div>
+
+  <div class="viz-wrap">
+    <div class="skills-grid" id="skills-grid"></div>
+  </div>
 </div>
 
-<!-- EXPERIENCE -->
-<div class="wrapper" id="experience">
-  <div class="section-label">Work</div>
+<!-- ── ABOUT ── -->
+<div class="section" id="about">
+  <div class="label">About</div>
+  <h2>Background</h2>
+  <p>I started as a licensed architect in Seoul, designing large-scale commercial and logistics projects at Gansam Architects & Partners. That foundation gave me a deep intuition for the built environment — but I wanted to work at a larger scale, with data.</p>
+  <p>At Coupang, I applied geospatial analysis to optimize a network of 400+ last-mile delivery nodes, scaling service coverage by 200% and generating $75K in annual cost savings. Now at NYU, I'm combining machine learning, GIS, and urban theory to tackle city-scale problems.</p>
+</div>
+
+<!-- ── EXPERIENCE ── -->
+<div class="section" id="experience">
+  <div class="label">Work</div>
   <h2>Experience</h2>
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-date">Oct 2025 – Present</div>
+  <div class="tl">
+    <div class="tl-row">
+      <div class="tl-date">Oct 2025 –<br>Present</div>
       <div class="tl-body">
         <h3>Planning Intern</h3>
-        <div class="company">New York University — Strategic Assessment, Planning &amp; Design</div>
+        <div class="co">New York University — Strategic Assessment, Planning & Design</div>
         <ul>
-          <li>Built data pipeline from data warehouse to Tableau, streamlining spatial analysis for campus capital projects.</li>
-          <li>Developed interactive dashboards bridging spatial and financial metrics for investment decisions.</li>
-          <li>Analyzed building energy data with Python models to identify utilization inefficiencies.</li>
+          <li>Built data pipeline from data warehouse to Tableau for campus capital project analysis.</li>
+          <li>Developed dashboards bridging spatial and financial metrics.</li>
+          <li>Analyzed building energy data with Python to identify inefficiencies.</li>
         </ul>
       </div>
     </div>
-    <div class="tl-item">
-      <div class="tl-date">Jun 2023 – Jun 2025</div>
+    <div class="tl-row">
+      <div class="tl-date">Jun 2023 –<br>Jun 2025</div>
       <div class="tl-body">
-        <h3>Designer — Space Design &amp; Innovation</h3>
-        <div class="company">Coupang · Logistics Launch Team</div>
+        <h3>Designer — Space Design & Innovation</h3>
+        <div class="co">Coupang · Logistics Launch Team</div>
         <ul>
-          <li>Engineered spatial capacity models for 400+ last-mile nodes; extended order cut-off times by 4 hours.</li>
+          <li>Spatial capacity models for 400+ last-mile nodes; extended order cut-off times by 4 hours.</li>
           <li>Scaled service coverage 200% via geospatial feasibility analysis across 200+ locations.</li>
-          <li>Formulated space planning standards from regional behavior data, rolled out to 100+ sites.</li>
-          <li>Revamped layouts at 8 critical sites, generating $75,000 in annual cost savings.</li>
+          <li>Revamped layouts at 8 sites, generating $75,000 in annual cost savings.</li>
         </ul>
       </div>
     </div>
-    <div class="tl-item">
-      <div class="tl-date">Jan 2020 – Jun 2023</div>
+    <div class="tl-row">
+      <div class="tl-date">Jan 2020 –<br>Jun 2023</div>
       <div class="tl-body">
         <h3>Architect</h3>
-        <div class="company">Gansam Architects &amp; Partners</div>
+        <div class="co">Gansam Architects & Partners</div>
         <ul>
           <li>Led Smart Logistics Center across all phases — design through construction documents.</li>
-          <li>Standardized company-wide drawing guidelines and person-hour estimates, improving resource planning metrics.</li>
+          <li>Standardized company-wide drawing guidelines and person-hour estimates.</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 
-<!-- PROJECTS -->
-<div class="wrapper" id="projects">
-  <div class="section-label">Projects</div>
+<!-- ── PROJECTS ── -->
+<div class="section" id="projects">
+  <div class="label">Projects</div>
   <h2>Selected Work</h2>
-  <div class="projects-grid">
-
-    <div class="project-card">
-      <div class="award-badge">🏆 1st Prize — ConTech Alliance Hackathon 2026</div>
-      <div class="proj-date">April 2026</div>
+  <div class="grid">
+    <div class="card">
+      <div class="badge">★ 1st Prize — ConTech Hackathon 2026</div>
+      <div class="card-date">April 2026</div>
       <h3>Convertshare</h3>
-      <p>Feasibility assessment tool for office-to-residential conversions, targeting 90M sq ft of vacant Manhattan office space. Built financial modeling covering acquisition, construction, and design costs alongside electrification cost-benefit analysis.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">Financial Modeling</span>
-        <span class="tag">GIS</span><span class="tag">React</span><span class="tag">AI Summaries</span>
-      </div>
-      <a href="https://github.com/ek4536" target="_blank" class="proj-link">GitHub →</a>
+      <p>Feasibility tool for office-to-residential conversions targeting 90M sq ft of vacant Manhattan office space.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Financial Modeling</span><span class="tag">GIS</span><span class="tag">React</span><span class="tag">Generative AI</span></div>
+      <a href="https://github.com/ek4536" target="_blank" class="card-link">GitHub →</a>
     </div>
-
-    <div class="project-card">
-      <div class="proj-date">December 2025</div>
+    <div class="card">
+      <div class="card-date">December 2025</div>
       <h3>NYC Public Sports Facilities Navigator</h3>
-      <p>Streamlit spatial search engine for NYC public sports facilities across all five boroughs. Powered by Generative AI to match users to the five nearest facilities by sport type and location, reducing search friction by 70%.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">Streamlit</span>
-        <span class="tag">Generative AI</span><span class="tag">PyDeck</span><span class="tag">NYC Open Data</span>
-      </div>
-      <a href="https://github.com/ek4536" target="_blank" class="proj-link">GitHub →</a>
+      <p>Spatial search engine for NYC public sports facilities powered by Generative AI across all five boroughs.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">Generative AI</span><span class="tag">PyDeck</span><span class="tag">NYC Open Data</span></div>
+      <a href="https://github.com/ek4536" target="_blank" class="card-link">GitHub →</a>
     </div>
-
-    <div class="project-card">
-      <div class="proj-date">May 2026</div>
+    <div class="card">
+      <div class="card-date">May 2026</div>
       <h3>Predicting Household Energy Burden</h3>
-      <p>ML project predicting energy burden (% income spent on utilities) across NYC census tracts using urban form variables — building age, density, FAR, tree canopy, transit proximity — alongside socioeconomic data. Used Random Forest, Linear Regression, and K-means clustering.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">Random Forest</span>
-        <span class="tag">K-means</span><span class="tag">GIS</span><span class="tag">NYC PLUTO</span>
-      </div>
-      <a href="https://github.com/ek4536" target="_blank" class="proj-link">GitHub →</a>
+      <p>ML project predicting energy burden across NYC census tracts from urban form and socioeconomic variables.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Random Forest</span><span class="tag">K-means</span><span class="tag">NYC PLUTO</span></div>
+      <a href="https://github.com/ek4536" target="_blank" class="card-link">GitHub →</a>
     </div>
-
-    <div class="project-card">
-      <div class="proj-date">May 2026</div>
-      <h3>Urban Heat &amp; Cool Roofs in NYC</h3>
-      <p>Data-driven framework for prioritizing cool roof installations across NYC to address urban heat island inequity. Combined PCA/K-means roof typology clustering, time series land surface temperature analysis, and optimization modeling to maximize impact under budget constraints.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">PCA</span>
-        <span class="tag">Time Series</span><span class="tag">Optimization</span><span class="tag">Urban Heat</span>
-      </div>
-      <a href="https://github.com/ek4536" target="_blank" class="proj-link">GitHub →</a>
+    <div class="card">
+      <div class="card-date">May 2026</div>
+      <h3>Urban Heat & Cool Roofs in NYC</h3>
+      <p>Optimization framework for cool roof installations targeting urban heat island inequity across NYC.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">PCA</span><span class="tag">Time Series</span><span class="tag">Optimization</span></div>
+      <a href="https://github.com/ek4536" target="_blank" class="card-link">GitHub →</a>
     </div>
-
   </div>
 </div>
 
-<!-- D3 VISUALIZATIONS -->
-<div class="wrapper" id="data-viz">
-  <div class="section-label">Interactive</div>
-  <h2>Data Visualizations</h2>
-
-  <!-- 1. NYC MAP -->
-  <div class="d3-section">
-    <h3>Project Map — NYC</h3>
-    <p class="d3-desc">Focus areas across my research projects. Hover over pins for details.</p>
-    <div id="map-tooltip" class="map-tooltip"></div>
-    <svg id="nyc-map" viewBox="0 0 700 460"></svg>
-  </div>
-
-  <!-- 2. CAREER TIMELINE -->
-  <div class="d3-section">
-    <h3>Career Timeline</h3>
-    <p class="d3-desc">From architecture to urban data science.</p>
-    <svg id="career-timeline" viewBox="0 0 700 280"></svg>
-  </div>
-
-  <!-- 3. SKILLS CHART -->
-  <div class="d3-section">
-    <h3>Skills Overview</h3>
-    <p class="d3-desc">Technical skills by category. Bubble size reflects depth of use.</p>
-    <svg id="skills-chart" viewBox="0 0 700 340"></svg>
-    <div class="skill-legend" id="skill-legend"></div>
-  </div>
-
-</div>
-
-<!-- EDUCATION -->
-<div class="wrapper" id="education">
-  <div class="section-label">Education</div>
-  <h2>Academic Background</h2>
-  <div class="edu-grid">
-    <div class="edu-card">
-      <div>
-        <h3>New York University, Tandon School of Engineering</h3>
-        <div class="degree">MS, Urban Data Science · Applied Data Science · Machine Learning · GIS</div>
-      </div>
-      <div>
-        <div class="gpa">GPA 3.9 / 4.0</div>
-        <div class="year">Expected May 2027</div>
-      </div>
-    </div>
-    <div class="edu-card">
-      <div>
-        <h3>Hanyang University, School of Architecture</h3>
-        <div class="degree">Bachelor of Architecture</div>
-      </div>
-      <div>
-        <div class="gpa">Summa Cum Laude</div>
-        <div class="year">Seoul, South Korea</div>
-      </div>
-    </div>
-  </div>
-  <div class="awards-list">
-    <div class="award-item">1st Prize — 2026 ConTech Alliance Hackathon <span style="color:var(--muted);font-size:0.82rem;margin-left:0.5rem;">Apr 2026</span></div>
-    <div class="award-item">Registered Architect — Korean Institute of Registered Architects (KIRA) <span style="color:var(--muted);font-size:0.82rem;margin-left:0.5rem;">Jun 2025</span></div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<div class="wrapper" id="contact" style="text-align:center; padding-bottom: 6rem;">
-  <div class="section-label">Say Hello</div>
+<!-- ── CONTACT ── -->
+<div class="section" id="contact">
+  <div class="label">Say Hello</div>
   <h2>Get in Touch</h2>
-  <p style="color:var(--muted);margin-bottom:2rem;font-size:1.05rem;">Open to research collaborations, internships, and full-time roles in urban data science.</p>
+  <p>Open to research collaborations, internships, and full-time roles in urban data science.</p>
   <div class="contact-links">
     <a href="mailto:eunji.kim@nyu.edu">eunji.kim@nyu.edu</a>
     <a href="https://linkedin.com/in/ejkimm" target="_blank">LinkedIn</a>
@@ -365,332 +268,281 @@
   </div>
 </div>
 
-<footer>© 2026 Eunji Kim · Built with HTML, CSS &amp; D3.js</footer>
+<footer>© 2026 Eunji Kim · Built with HTML, CSS & D3.js</footer>
 
 <script>
-const GREEN = '#2d6a4f';
-const GREEN_L = '#52b788';
-const GREEN_P = '#d8f3dc';
-const MUTED = '#6b7280';
-const BLUE = '#1d4ed8';
-const PURPLE = '#7c3aed';
-const RED = '#dc2626';
+const SEOUL_COLOR = '#b45309';
+const NYC_COLOR   = '#2d6a4f';
+const STONE = '#6b7280';
+const BORDER = '#e2ede6';
 
-// ═══════════════════════════════════════
-// 1. NYC MAP (D3 with GeoJSON fetch)
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// 1A. WORLD MAP
+// ═══════════════════════════════════════════════════════════
 (async function() {
-  const svg = d3.select('#nyc-map');
-  const W = 700, H = 460;
-  const g = svg.append('g');
+  const W = 760, H = 300;
+  const svg = d3.select('#world-map');
+  const tip = d3.select('#map-tip');
 
-  // Load NYC borough boundaries from public GeoJSON
-  let geoData;
+  let world;
   try {
-    geoData = await d3.json('https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/new-york-city-boroughs.geojson');
-  } catch(e) {
-    // Fallback: draw simplified shapes if fetch fails
-    drawFallbackMap(svg, W, H);
-    return;
-  }
+    world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+  } catch(e) { return; }
 
-  const projection = d3.geoMercator().fitSize([W, H - 40], geoData);
-  const path = d3.geoPath().projection(projection);
+  const proj = d3.geoNaturalEarth1()
+    .scale(140)
+    .translate([W / 2, H / 2]);
+  const path = d3.geoPath().projection(proj);
 
-  const boroughColors = {
-    'Manhattan': '#b7e4c7',
-    'Brooklyn': '#c7f0d8',
-    'Queens': '#d8f3dc',
-    'Bronx': '#95d5b2',
-    'Staten Island': '#e9f5ec',
-  };
+  // Sphere background
+  svg.append('path')
+    .datum({type:'Sphere'})
+    .attr('d', path)
+    .attr('fill', '#eaf4f0')
+    .attr('stroke', BORDER)
+    .attr('stroke-width', 0.5);
 
-  // Borough paths
-  g.selectAll('.borough')
-    .data(geoData.features)
+  // Countries
+  svg.append('g')
+    .selectAll('path')
+    .data(topojson.feature(world, world.objects.countries).features)
     .enter().append('path')
     .attr('d', path)
-    .attr('fill', d => boroughColors[d.properties.name] || GREEN_P)
-    .attr('stroke', '#74c69d')
-    .attr('stroke-width', 1)
-    .attr('opacity', 0)
-    .transition().duration(800).delay((d,i) => i*120)
-    .attr('opacity', 1);
+    .attr('fill', '#d8ece2')
+    .attr('stroke', '#b7dfc8')
+    .attr('stroke-width', 0.4);
 
-  // Borough name labels at centroids
-  g.selectAll('.borough-label')
-    .data(geoData.features)
-    .enter().append('text')
-    .attr('transform', d => {
-      const c = path.centroid(d);
-      return `translate(${c[0]},${c[1]})`;
-    })
-    .attr('text-anchor', 'middle')
-    .attr('font-family', 'Helvetica Neue, sans-serif')
-    .attr('font-size', '10px')
-    .attr('fill', GREEN)
-    .attr('font-weight', '600')
-    .attr('opacity', 0)
-    .text(d => d.properties.name)
-    .transition().duration(500).delay(900)
-    .attr('opacity', 0.85);
-
-  // Project pins (lat/lng → projected coordinates)
-  const projects = [
-    {
-      name: 'Convertshare',
-      desc: 'Office-to-residential feasibility tool targeting 90M sq ft of vacant Manhattan office space.',
-      color: GREEN, lat: 40.748, lng: -73.985
-    },
-    {
-      name: 'NYC Sports Navigator',
-      desc: 'Spatial search engine for public sports facilities across all 5 boroughs.',
-      color: BLUE, lat: 40.678, lng: -73.944
-    },
-    {
-      name: 'Energy Burden Prediction',
-      desc: 'Predicting household energy burden from urban form + socioeconomic data across NYC census tracts.',
-      color: PURPLE, lat: 40.730, lng: -73.920
-    },
-    {
-      name: 'Urban Heat & Cool Roofs',
-      desc: 'Prioritizing cool roof installations to reduce urban heat island inequity across NYC.',
-      color: RED, lat: 40.660, lng: -73.890
-    },
+  // Cities
+  const cities = [
+    { name:'Seoul', lat: 37.57, lng: 126.98, color: SEOUL_COLOR,
+      desc:'Seoul, South Korea\nGansam Architects (2020–2023)\nCoupang (2023–2025)' },
+    { name:'New York', lat: 40.71, lng: -74.01, color: NYC_COLOR,
+      desc:'New York City, USA\nNYU Urban Data Science (2025–)\nNYU Planning Intern (2025–)' },
   ];
 
-  const tooltip = d3.select('#map-tooltip');
-  const mapContainer = document.querySelector('.d3-section');
+  // Flight arc between cities
+  const seoulPt = proj([126.98, 37.57]);
+  const nycPt   = proj([-74.01, 40.71]);
 
-  const pinGroup = g.selectAll('.pin')
-    .data(projects)
-    .enter().append('g')
-    .attr('class', 'pin')
-    .attr('transform', d => {
-      const [x, y] = projection([d.lng, d.lat]);
-      return `translate(${x},${y})`;
-    })
-    .style('cursor', 'pointer');
-
-  pinGroup.append('circle').attr('r', 16)
-    .attr('fill', d => d.color).attr('opacity', 0.12);
-
-  pinGroup.append('circle').attr('r', 7)
-    .attr('fill', d => d.color)
-    .attr('stroke', '#fff').attr('stroke-width', 2)
+  // Great circle arc via D3 geo
+  svg.append('path')
+    .datum({ type:'LineString', coordinates: [[126.98,37.57],[-74.01,40.71]] })
+    .attr('d', path)
+    .attr('fill','none')
+    .attr('stroke', '#9ca3af')
+    .attr('stroke-width', 1.2)
+    .attr('stroke-dasharray', '4,3')
     .attr('opacity', 0)
-    .transition().duration(400).delay((d,i) => 1000+i*150)
-    .attr('opacity', 1);
+    .transition().duration(1200).delay(600)
+    .attr('opacity', 0.7);
 
+  // Arrow head near NYC
+  const arrowPath = d3.symbol().type(d3.symbolTriangle).size(28);
+  // Calculate angle from Seoul toward NYC in screen space
+  const angle = Math.atan2(nycPt[1] - seoulPt[1], nycPt[0] - seoulPt[0]) * 180 / Math.PI + 90;
+  svg.append('path')
+    .attr('d', arrowPath)
+    .attr('transform', `translate(${nycPt[0] - 14},${nycPt[1] + 2}) rotate(${angle})`)
+    .attr('fill','#9ca3af')
+    .attr('opacity', 0)
+    .transition().duration(400).delay(1700)
+    .attr('opacity', 0.7);
+
+  // City pins
+  cities.forEach(c => {
+    const [cx, cy] = proj([c.lng, c.lat]);
+    const g = svg.append('g').style('cursor','pointer');
+
+    // Pulse ring
+    g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 12)
+      .attr('fill', c.color).attr('opacity', 0.12);
+
+    // Dot
+    g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 0)
+      .attr('fill', c.color).attr('stroke', '#fff').attr('stroke-width', 1.8)
+      .transition().duration(400).delay(c.name === 'Seoul' ? 300 : 1800)
+      .attr('r', 6);
+
+    // Label
+    const lx = c.name === 'Seoul' ? cx + 10 : cx - 10;
+    const anchor = c.name === 'Seoul' ? 'start' : 'end';
+    g.append('text').attr('x', lx).attr('y', cy - 10)
+      .attr('text-anchor', anchor)
+      .attr('font-family', 'DM Sans, sans-serif').attr('font-size', '10px')
+      .attr('font-weight', '500').attr('fill', c.color)
+      .attr('opacity', 0)
+      .text(c.name)
+      .transition().duration(400).delay(c.name === 'Seoul' ? 500 : 2000)
+      .attr('opacity', 1);
+
+    g.on('mousemove', function(ev) {
+        const r = document.querySelector('.viz-wrap').getBoundingClientRect();
+        tip.style('opacity',1)
+          .style('left',(ev.clientX-r.left+12)+'px')
+          .style('top',(ev.clientY-r.top-8)+'px')
+          .html(c.desc.replace(/\n/g,'<br>'));
+      })
+      .on('mouseleave', () => tip.style('opacity',0));
+  });
+
+  // Pulse animation
   function pulse() {
-    g.selectAll('.pin circle:first-child')
-      .transition().duration(1400).ease(d3.easeSinInOut)
-      .attr('r', 20).attr('opacity', 0.05)
-      .transition().duration(1400)
-      .attr('r', 12).attr('opacity', 0.14)
+    svg.selectAll('circle[r="12"]')
+      .transition().duration(1400).ease(d3.easeSinInOut).attr('r',16).attr('opacity',0.06)
+      .transition().duration(1400).attr('r',10).attr('opacity',0.13)
       .on('end', pulse);
   }
-  setTimeout(pulse, 1300);
-
-  pinGroup
-    .on('mousemove', function(event, d) {
-      const svgEl = document.getElementById('nyc-map');
-      const rect = svgEl.parentElement.getBoundingClientRect();
-      tooltip.style('opacity',1)
-        .style('left', (event.clientX - rect.left + 14)+'px')
-        .style('top', (event.clientY - rect.top - 8)+'px')
-        .html(`<strong>${d.name}</strong><br>${d.desc}`);
-    })
-    .on('mouseleave', () => tooltip.style('opacity', 0));
-
-  // Legend
-  const leg = svg.append('g').attr('transform', `translate(20,${H-30})`);
-  projects.forEach((p, i) => {
-    const lg = leg.append('g').attr('transform', `translate(${i*175},0)`);
-    lg.append('circle').attr('r', 5).attr('fill', p.color);
-    lg.append('text').attr('x',9).attr('y',4)
-      .attr('font-family','Helvetica Neue,sans-serif').attr('font-size','9px')
-      .attr('fill',MUTED).text(p.name);
-  });
-
+  setTimeout(pulse, 2200);
 })();
 
-function drawFallbackMap(svg, W, H) {
-  // Simplified fallback if GeoJSON fails to load
-  const boroughs = [
-    { name:'Manhattan', d:'M295,95 L330,85 L345,115 L350,155 L345,205 L340,245 L325,255 L310,235 L305,195 L295,155 L290,125 Z', lx:318, ly:175 },
-    { name:'Bronx', d:'M330,85 L345,75 L420,70 L440,90 L430,115 L400,125 L370,120 L345,115 Z', lx:385, ly:95 },
-    { name:'Queens', d:'M345,115 L430,115 L510,105 L540,155 L530,215 L500,255 L450,275 L400,265 L370,255 L345,205 L350,155 Z', lx:455, ly:190 },
-    { name:'Brooklyn', d:'M325,255 L340,245 L370,255 L400,265 L420,295 L410,355 L380,375 L330,365 L295,325 L300,285 Z', lx:360, ly:315 },
-    { name:'Staten Island', d:'M125,335 L175,315 L220,325 L230,365 L210,405 L165,425 L120,405 L110,370 Z', lx:168, ly:370 },
-  ];
-  svg.selectAll('.borough').data(boroughs).enter()
-    .append('path').attr('d',d=>d.d).attr('fill',GREEN_P).attr('stroke','#74c69d').attr('stroke-width',1.5);
-  svg.selectAll('.blabel').data(boroughs).enter()
-    .append('text').attr('x',d=>d.lx).attr('y',d=>d.ly)
-    .attr('text-anchor','middle').attr('font-family','Helvetica Neue,sans-serif')
-    .attr('font-size','10px').attr('fill',GREEN).text(d=>d.name);
-}
-
-// ═══════════════════════════════════════
-// 2. CAREER TIMELINE
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// 1B. CAREER TIMELINE
+// ═══════════════════════════════════════════════════════════
 (function() {
-  const svg = d3.select('#career-timeline');
-  const W = 700, H = 280;
-  const ml = 55, mr = 30, mt = 30, mb = 30;
+  const W = 760, H = 160;
+  const ml = 60, mr = 30, mt = 20, mb = 20;
   const iW = W - ml - mr;
+  const svg = d3.select('#tl');
   const g = svg.append('g').attr('transform', `translate(${ml},${mt})`);
-  const axisY = 120;
+  const axY = 75;
 
-  const events = [
-    { date: new Date(2020,0), label: ['Gansam','Architects'], sub: 'Architect', up: true },
-    { date: new Date(2023,5), label: ['Coupang'], sub: 'Space Design & Innovation', up: false },
-    { date: new Date(2025,5), label: ['NYU','Tandon'], sub: 'MS Urban Data Science', up: true },
-    { date: new Date(2025,9), label: ['NYU Planning','Intern'], sub: 'Data Pipelines & Dashboards', up: false },
-    { date: new Date(2026,3), label: ['🏆 ConTech'], sub: '1st Prize Hackathon', up: true },
-    { date: new Date(2027,4), label: ['Graduation'], sub: 'MS Expected', up: false },
+  const START = new Date(2019, 6);
+  const END   = new Date(2027, 0);
+  const x = d3.scaleTime().domain([START, END]).range([0, iW]);
+
+  const NOW = new Date(2026, 4); // May 2026
+
+  // Phase bands (colored bars)
+  const phases = [
+    { start: new Date(2020,0), end: new Date(2023,5), color: SEOUL_COLOR, label:'Gansam Architects', sub:'Architect · Seoul', up:true },
+    { start: new Date(2023,5), end: new Date(2025,5), color: SEOUL_COLOR, label:'Coupang', sub:'Space Design & Innovation · Seoul', up:false },
+    { start: new Date(2025,5), end: NOW,               color: NYC_COLOR,   label:'NYU Tandon + Planning Intern', sub:'Urban Data Science · New York', up:true },
+    { start: new Date(2026,3), end: NOW,               color: NYC_COLOR,   label:'ConTech ★ 1st Prize', sub:'Hackathon · New York', up:false },
   ];
 
-  const x = d3.scaleTime()
-    .domain([new Date(2019,6), new Date(2027,10)])
-    .range([0, iW]);
-
-  // Axis line (animated)
+  // Baseline
   g.append('line')
-    .attr('x1',0).attr('y1',axisY).attr('x2',0).attr('y2',axisY)
-    .attr('stroke',GREEN_L).attr('stroke-width',2.5)
-    .transition().duration(1200).attr('x2',iW);
+    .attr('x1', x(new Date(2020,0))).attr('y1', axY)
+    .attr('x2', x(new Date(2020,0))).attr('y2', axY)
+    .attr('stroke', '#d1d5db').attr('stroke-width', 1.5)
+    .transition().duration(1000)
+    .attr('x2', x(NOW));
 
-  events.forEach((ev, i) => {
-    const cx = x(ev.date);
-    const lineY2 = ev.up ? axisY - 55 : axisY + 55;
-    const textY  = ev.up ? axisY - 78 : axisY + 68;
+  // Phase line segments
+  phases.forEach((ph, i) => {
+    const x1 = x(ph.start), x2 = x(ph.end);
+    const barY = ph.up ? axY - 8 : axY + 4;
 
     g.append('line')
-      .attr('x1',cx).attr('x2',cx).attr('y1',axisY).attr('y2',axisY)
-      .attr('stroke',GREEN_L).attr('stroke-width',1).attr('stroke-dasharray','3,2')
-      .transition().duration(500).delay(1200+i*160)
-      .attr('y2',lineY2);
+      .attr('x1', x1).attr('y1', barY).attr('x2', x1).attr('y2', barY)
+      .attr('stroke', ph.color).attr('stroke-width', 5)
+      .attr('stroke-linecap', 'round').attr('opacity', 0.85)
+      .transition().duration(700).delay(800 + i * 200)
+      .attr('x2', x2);
 
-    g.append('circle')
-      .attr('cx',cx).attr('cy',axisY).attr('r',0)
-      .attr('fill',GREEN).attr('stroke','#fff').attr('stroke-width',2)
-      .transition().duration(300).delay(1200+i*160)
-      .attr('r',7);
+    // Start dot
+    g.append('circle').attr('cx', x1).attr('cy', axY).attr('r', 0)
+      .attr('fill', ph.color).attr('stroke', '#fff').attr('stroke-width', 1.8)
+      .transition().duration(280).delay(800 + i * 200)
+      .attr('r', 5.5);
 
-    const tg = g.append('g')
-      .attr('transform',`translate(${cx},${textY})`)
-      .attr('opacity',0);
+    // Label
+    const labelY = ph.up ? axY - 22 : axY + 32;
+    const midX   = (x1 + x2) / 2;
 
-    ev.label.forEach((line,li) => {
-      tg.append('text')
-        .attr('text-anchor','middle').attr('y', li*13)
-        .attr('font-family','Helvetica Neue,sans-serif').attr('font-size','10px')
-        .attr('font-weight','700').attr('fill',GREEN).text(line);
-    });
-    tg.append('text')
-      .attr('text-anchor','middle').attr('y', ev.label.length*13+2)
-      .attr('font-family','Helvetica Neue,sans-serif').attr('font-size','9px')
-      .attr('fill',MUTED).text(ev.sub);
-
-    tg.transition().duration(400).delay(1450+i*160).attr('opacity',1);
+    const tg = g.append('g').attr('opacity', 0);
+    tg.append('text').attr('x', midX).attr('y', labelY)
+      .attr('text-anchor', 'middle')
+      .attr('font-family', 'DM Sans,sans-serif').attr('font-size', '9.5px')
+      .attr('font-weight', '500').attr('fill', ph.color).text(ph.label);
+    tg.append('text').attr('x', midX).attr('y', labelY + 12)
+      .attr('text-anchor', 'middle')
+      .attr('font-family', 'DM Sans,sans-serif').attr('font-size', '8.5px')
+      .attr('fill', STONE).text(ph.sub);
+    tg.transition().duration(400).delay(1200 + i * 200).attr('opacity', 1);
   });
 
-  // Year labels
-  [2020,2021,2022,2023,2024,2025,2026,2027].forEach(yr => {
-    g.append('text')
-      .attr('x', x(new Date(yr,0))).attr('y', axisY+18)
+  // Year ticks
+  [2020,2021,2022,2023,2024,2025,2026].forEach(yr => {
+    g.append('line').attr('x1', x(new Date(yr,0))).attr('x2', x(new Date(yr,0)))
+      .attr('y1', axY - 3).attr('y2', axY + 3)
+      .attr('stroke', '#d1d5db').attr('stroke-width', 1);
+    g.append('text').attr('x', x(new Date(yr,0))).attr('y', axY + 15)
       .attr('text-anchor','middle')
-      .attr('font-family','Helvetica Neue,sans-serif').attr('font-size','9px')
-      .attr('fill',MUTED).text(yr);
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','8px')
+      .attr('fill', STONE).text(yr);
   });
+
+  // "Now" marker
+  g.append('line')
+    .attr('x1', x(NOW)).attr('x2', x(NOW))
+    .attr('y1', axY - 18).attr('y2', axY + 18)
+    .attr('stroke', '#9ca3af').attr('stroke-width', 1).attr('stroke-dasharray','3,2');
+  g.append('text').attr('x', x(NOW) + 4).attr('y', axY - 20)
+    .attr('font-family','DM Sans,sans-serif').attr('font-size','8px')
+    .attr('fill','#9ca3af').text('now');
 })();
 
-// ═══════════════════════════════════════
-// 3. SKILLS BUBBLE CHART (force layout)
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// 2. SKILLS GRID
+// ═══════════════════════════════════════════════════════════
 (function() {
-  const W = 700, H = 340;
-  const svg = d3.select('#skills-chart');
-
-  const categories = [
-    { name: 'Data Analytics', color: GREEN, skills: [
-      {name:'Python',v:9},{name:'Pandas',v:7},{name:'GeoPandas',v:8},
-      {name:'NumPy',v:7},{name:'Scikit-learn',v:7},{name:'PyTorch',v:5},{name:'SQL',v:7},
+  const cats = [
+    { name:'Data Analytics', color: NYC_COLOR, skills:[
+      {n:'Python', v:5}, {n:'Pandas / GeoPandas', v:4}, {n:'NumPy', v:4},
+      {n:'Scikit-learn', v:4}, {n:'PyTorch', v:3}, {n:'SQL', v:4},
     ]},
-    { name: 'Geospatial', color: BLUE, skills: [
-      {name:'ArcGIS',v:8},{name:'Pydeck',v:7},{name:'Spatial Modeling',v:8},{name:'Location Intel.',v:8},
+    { name:'Geospatial', color: '#1d6ea8', skills:[
+      {n:'ArcGIS', v:4}, {n:'Pydeck / Mapbox', v:4},
+      {n:'Spatial Modeling', v:5}, {n:'Location Intelligence', v:4},
     ]},
-    { name: 'Data Engineering', color: PURPLE, skills: [
-      {name:'Apache Spark',v:6},{name:'MongoDB',v:6},{name:'Oracle',v:5},
+    { name:'Data Engineering', color: '#7c3aed', skills:[
+      {n:'Apache Spark', v:3}, {n:'MongoDB', v:3}, {n:'Oracle', v:3},
+      {n:'Tableau / Power BI', v:4},
     ]},
-    { name: 'Visualization', color: RED, skills: [
-      {name:'Tableau',v:8},{name:'Plotly',v:7},{name:'Matplotlib',v:7},{name:'Power BI',v:6},{name:'D3.js',v:6},
+    { name:'Visualization', color: SEOUL_COLOR, skills:[
+      {n:'Tableau', v:4}, {n:'Plotly / Matplotlib', v:4},
+      {n:'Power BI', v:3}, {n:'D3.js', v:3},
     ]},
   ];
 
-  const allNodes = [];
-  categories.forEach(cat => {
-    cat.skills.forEach(s => {
-      allNodes.push({ name: s.name, value: s.v, category: cat.name, color: cat.color });
+  const container = document.getElementById('skills-grid');
+
+  cats.forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'skill-cat';
+
+    const title = document.createElement('div');
+    title.className = 'skill-cat-title';
+    title.style.color = cat.color;
+    title.textContent = cat.name;
+    div.appendChild(title);
+
+    cat.skills.forEach(sk => {
+      const row = document.createElement('div');
+      row.className = 'skill-row';
+
+      const name = document.createElement('span');
+      name.className = 'skill-name';
+      name.textContent = sk.n;
+
+      const dots = document.createElement('div');
+      dots.className = 'skill-dots';
+      for (let i = 1; i <= 5; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot ' + (i <= sk.v ? 'filled' : 'empty');
+        d.style.background = cat.color;
+        dots.appendChild(d);
+      }
+
+      row.appendChild(name);
+      row.appendChild(dots);
+      div.appendChild(row);
     });
-  });
 
-  const rScale = d3.scaleSqrt().domain([5,9]).range([22,46]);
-
-  const sim = d3.forceSimulation(allNodes)
-    .force('x', d3.forceX(W/2).strength(0.05))
-    .force('y', d3.forceY(H/2).strength(0.05))
-    .force('collide', d3.forceCollide(d => rScale(d.value) + 3).strength(0.8))
-    .stop();
-
-  for (let i = 0; i < 200; i++) sim.tick();
-
-  const node = svg.selectAll('.bubble')
-    .data(allNodes)
-    .enter().append('g')
-    .attr('class','bubble')
-    .attr('transform', d => `translate(${
-      Math.max(rScale(d.value), Math.min(W - rScale(d.value), d.x))
-    },${
-      Math.max(rScale(d.value), Math.min(H - rScale(d.value), d.y))
-    })`);
-
-  node.append('circle')
-    .attr('r',0)
-    .attr('fill', d => d.color).attr('opacity', 0.16)
-    .transition().duration(600).delay((d,i)=>i*40)
-    .attr('r', d => rScale(d.value));
-
-  node.append('circle')
-    .attr('r',0)
-    .attr('fill','none')
-    .attr('stroke', d => d.color).attr('stroke-width', 1.5).attr('opacity', 0.55)
-    .transition().duration(600).delay((d,i)=>i*40)
-    .attr('r', d => rScale(d.value));
-
-  node.append('text')
-    .attr('text-anchor','middle').attr('dominant-baseline','middle')
-    .attr('font-family','Helvetica Neue,sans-serif')
-    .attr('font-size', d => Math.min(rScale(d.value)*0.38, 12)+'px')
-    .attr('font-weight','600')
-    .attr('fill', d => d.color)
-    .attr('opacity',0)
-    .text(d => d.name)
-    .transition().duration(400).delay((d,i)=>250+i*40)
-    .attr('opacity',1);
-
-  // Legend
-  const legendEl = document.getElementById('skill-legend');
-  categories.forEach(cat => {
-    const item = document.createElement('div');
-    item.className = 'skill-legend-item';
-    item.innerHTML = `<div class="skill-legend-dot" style="background:${cat.color}"></div>${cat.name}`;
-    legendEl.appendChild(item);
+    container.appendChild(div);
   });
 })();
 </script>
-
 </body>
 </html>
