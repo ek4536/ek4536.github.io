@@ -187,7 +187,7 @@
 
   <!-- Timeline -->
   <div class="viz-card">
-    <svg id="timeline" viewBox="0 0 800 170"></svg>
+    <svg id="timeline" viewBox="0 0 800 290"></svg>
   </div>
 
   <!-- Skills -->
@@ -349,135 +349,129 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
 })();
 
 // ═══════════════════════════════════════════════
-// TIMELINE — Education + Work tracks
+// TIMELINE — Education + Work, piecewise scale
 // ═══════════════════════════════════════════════
 (function() {
-  const W = 800, H = 170;
-  const ml = 90, mr = 20, mt = 22;
+  const W = 800, H = 230;
+  const ml = 88, mr = 24, mt = 30;
   const iW = W - ml - mr;
   const svg = d3.select('#timeline');
   const g = svg.append('g').attr('transform',`translate(${ml},${mt})`);
 
-  const START = new Date(2018, 6);
-  const END   = new Date(2027, 0);
-  const NOW   = new Date(2026, 4);
-  const x = d3.scaleTime().domain([START, END]).range([0, iW]);
+  // Piecewise scale: 2019–2023 gets 30% of width, 2023–2026.5 gets 70%
+  // → recent years are spread wider, older years compressed
+  const PIVOT  = new Date(2023, 0);
+  const T_START = new Date(2019, 0).getTime();
+  const T_PIVOT = PIVOT.getTime();
+  const T_END   = new Date(2026, 8).getTime();
+  const NOW     = new Date(2026, 4);
 
-  const EDU_Y  = 35;   // Education track
-  const WORK_Y = 95;   // Work track
+  function x(date) {
+    const t = date.getTime();
+    if (t <= T_PIVOT) {
+      return (t - T_START) / (T_PIVOT - T_START) * iW * 0.30;
+    } else {
+      return iW * 0.30 + (t - T_PIVOT) / (T_END - T_PIVOT) * iW * 0.70;
+    }
+  }
 
-  // Year grid
-  [2019,2020,2021,2022,2023,2024,2025,2026].forEach(yr => {
-    g.append('line')
-      .attr('x1', x(new Date(yr,0))).attr('x2', x(new Date(yr,0)))
-      .attr('y1', 15).attr('y2', 118)
-      .attr('stroke','#e9ede9').attr('stroke-width',1);
-    g.append('text')
-      .attr('x', x(new Date(yr,0))).attr('y', 132)
-      .attr('text-anchor','middle')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','8px')
-      .attr('fill', ST).text(yr);
+  const EDU_Y  = 72;
+  const WORK_Y = 195;
+  const GRID_TOP = 20, GRID_BOT = 215;
+
+  const gridYears = [2019, 2021, 2023, 2024, 2025, 2026];
+  gridYears.forEach(yr => {
+    const gx = x(new Date(yr, 0));
+    g.append('line').attr('x1',gx).attr('x2',gx).attr('y1',GRID_TOP).attr('y2',GRID_BOT)
+      .attr('stroke','#e4ebe5').attr('stroke-width',1);
+    g.append('text').attr('x',gx).attr('y',GRID_BOT+16).attr('text-anchor','middle')
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','10px').attr('fill',ST).text(yr);
   });
 
-  // "now" line
-  g.append('line')
-    .attr('x1',x(NOW)).attr('x2',x(NOW)).attr('y1',15).attr('y2',118)
-    .attr('stroke','#9ca3af').attr('stroke-width',1).attr('stroke-dasharray','3,2');
-  g.append('text').attr('x',x(NOW)+3).attr('y',13)
-    .attr('font-family','DM Sans,sans-serif').attr('font-size','7.5px').attr('fill','#9ca3af').text('now');
+  const nowX = x(NOW);
+  g.append('line').attr('x1',nowX).attr('x2',nowX).attr('y1',GRID_TOP).attr('y2',GRID_BOT)
+    .attr('stroke','#b0b8b4').attr('stroke-width',1).attr('stroke-dasharray','3,2');
+  g.append('text').attr('x',nowX+4).attr('y',GRID_TOP-4)
+    .attr('font-family','DM Sans,sans-serif').attr('font-size','9px').attr('fill','#9ca3af').text('now');
 
-  // Track labels
   [['Education', EDU_Y], ['Work', WORK_Y]].forEach(([label, y]) => {
-    g.append('text').attr('x',-8).attr('y',y+4)
-      .attr('text-anchor','end')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','8px')
+    g.append('text').attr('x',-10).attr('y',y+4).attr('text-anchor','end')
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','10px')
       .attr('font-weight','500').attr('fill',ST).text(label);
   });
 
-  // ── Education events ──
+  // ── EDUCATION baseline ──
+  g.append('line')
+    .attr('x1', x(new Date(2019,8))).attr('y1',EDU_Y)
+    .attr('x2', x(new Date(2019,8))).attr('y2',EDU_Y)
+    .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.5)
+    .transition().duration(900).delay(400).attr('x2', x(NOW));
+
+  // Education events — B.Arch below, NYU MS above, ConTech below
   const eduEvents = [
-    { date: new Date(2019, 8), name:'B.Arch', sub:'Hanyang Univ.', color:'#6b7280', above:false },
-    { date: new Date(2025, 5), name:'NYU MS',  sub:'Urban Data Science', color: NC, above:true },
+    { date: new Date(2019,8), name:'B.Arch Graduate',      sub:'Hanyang Univ.',      color:'#6b7280', above:false, anchor:'start' },
+    { date: new Date(2025,5), name:'NYU MS',               sub:'Urban Data Science', color:NC,        above:true,  anchor:'start' },
+    { date: new Date(2026,3), name:'ConTech Hackathon ★',  sub:'1st Prize · 2026',   color:NC,        above:false, anchor:'end'   },
   ];
 
-  // Education baseline
   g.append('line')
-    .attr('x1', x(new Date(2019,8))).attr('y1', EDU_Y)
-    .attr('x2', x(new Date(2019,8))).attr('y2', EDU_Y)
+    .attr('x1', x(new Date(2019,8))).attr('y1',EDU_Y)
+    .attr('x2', x(new Date(2019,8))).attr('y2',EDU_Y)
     .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.5)
     .transition().duration(900).delay(400).attr('x2', x(NOW));
 
   eduEvents.forEach((ev, i) => {
     const ex = x(ev.date), delay = 500 + i*400;
     g.append('circle').attr('cx',ex).attr('cy',EDU_Y).attr('r',0)
-      .attr('fill',ev.color).attr('stroke','#fff').attr('stroke-width',1.5)
-      .transition().duration(250).delay(delay).attr('r',4.5);
-
-    const ly = ev.above ? EDU_Y - 11 : EDU_Y + 16;
-    const sy = ev.above ? EDU_Y - 1  : EDU_Y + 26;
+      .attr('fill',ev.color).attr('stroke','#fff').attr('stroke-width',1.8)
+      .transition().duration(250).delay(delay).attr('r',5);
+    const ly = ev.above ? EDU_Y - 34 : EDU_Y + 30;
+    const sy = ev.above ? EDU_Y - 20 : EDU_Y + 44;
+    const ox = ev.anchor === 'end' ? -4 : 4;
     const tg = g.append('g').attr('opacity',0);
-    tg.append('text').attr('x',ex).attr('y',ly).attr('text-anchor','middle')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','8.5px')
+    tg.append('text').attr('x',ex+ox).attr('y',ly).attr('text-anchor',ev.anchor)
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','10.5px')
       .attr('font-weight','500').attr('fill',ev.color).text(ev.name);
-    tg.append('text').attr('x',ex).attr('y',sy).attr('text-anchor','middle')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','7.5px')
+    tg.append('text').attr('x',ex+ox).attr('y',sy).attr('text-anchor',ev.anchor)
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','9.5px')
       .attr('fill',ST).text(ev.sub);
     tg.transition().duration(280).delay(delay+200).attr('opacity',1);
   });
 
-  // ── Work phases ──
-  const workPhases = [
-    { start: new Date(2020,0), end: new Date(2023,5), color: SC, name:'Gansam Architects',    sub:'Architect',             above:true  },
-    { start: new Date(2023,5), end: new Date(2025,5), color: SC, name:'Coupang',               sub:'Logistics Launch',      above:false },
-    { start: new Date(2025,5), end: NOW,              color: NC, name:'NYU Strategic Assess.', sub:'Planning Intern',       above:true  },
-  ];
-
-  // Work baseline
+  // ── WORK baseline ──
   g.append('line')
-    .attr('x1', x(new Date(2020,0))).attr('y1', WORK_Y)
-    .attr('x2', x(new Date(2020,0))).attr('y2', WORK_Y)
+    .attr('x1', x(new Date(2020,0))).attr('y1',WORK_Y)
+    .attr('x2', x(new Date(2020,0))).attr('y2',WORK_Y)
     .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.4)
     .transition().duration(900).delay(400).attr('x2', x(NOW));
 
-  workPhases.forEach((ph, i) => {
-    const x1 = x(ph.start), x2 = x(ph.end);
-    const delay = 700 + i*350;
+  // Work phases — Gansam above, Coupang below, NYU above
+  const workPhases = [
+    { start: new Date(2020,0), end: new Date(2023,5), color:SC, name:'Gansam Architects',  sub:'Architect',        above:true  },
+    { start: new Date(2023,5), end: new Date(2025,5), color:SC, name:'Coupang',             sub:'Logistics Launch', above:true  },
+    { start: new Date(2025,5), end: NOW,              color:NC, name:'NYU Planning Intern', sub:'Strategic Assess.', above:true },
+  ];
 
+  workPhases.forEach((ph, i) => {
+    const x1 = x(ph.start), x2 = x(ph.end), delay = 700 + i*350;
     g.append('line')
       .attr('x1',x1).attr('y1',WORK_Y).attr('x2',x1).attr('y2',WORK_Y)
-      .attr('stroke',ph.color).attr('stroke-width',5)
-      .attr('stroke-linecap','round').attr('opacity',0.88)
-      .transition().duration(550).delay(delay).attr('x2',x2);
-
+      .attr('stroke',ph.color).attr('stroke-width',6).attr('stroke-linecap','round').attr('opacity',0.88)
+      .transition().duration(600).delay(delay).attr('x2',x2);
     g.append('circle').attr('cx',x1).attr('cy',WORK_Y).attr('r',0)
-      .attr('fill',ph.color).attr('stroke','#fff').attr('stroke-width',1.5)
-      .transition().duration(220).delay(delay).attr('r',4.5);
-
-    const ly = ph.above ? WORK_Y - 11 : WORK_Y + 16;
-    const sy = ph.above ? WORK_Y - 1  : WORK_Y + 26;
+      .attr('fill',ph.color).attr('stroke','#fff').attr('stroke-width',1.8)
+      .transition().duration(220).delay(delay).attr('r',5);
+    const ly = ph.above ? WORK_Y - 34 : WORK_Y + 30;
+    const sy = ph.above ? WORK_Y - 20 : WORK_Y + 44;
     const tg = g.append('g').attr('opacity',0);
-    tg.append('text').attr('x',x1).attr('y',ly).attr('text-anchor','start')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','8.5px')
+    tg.append('text').attr('x',x1+4).attr('y',ly).attr('text-anchor','start')
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','10.5px')
       .attr('font-weight','500').attr('fill',ph.color).text(ph.name);
-    tg.append('text').attr('x',x1).attr('y',sy).attr('text-anchor','start')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','7.5px')
+    tg.append('text').attr('x',x1+4).attr('y',sy).attr('text-anchor','start')
+      .attr('font-family','DM Sans,sans-serif').attr('font-size','9.5px')
       .attr('fill',ST).text(ph.sub);
     tg.transition().duration(280).delay(delay+300).attr('opacity',1);
   });
-
-  // ConTech event dot (on work track)
-  const ctX = x(new Date(2026,3));
-  g.append('circle').attr('cx',ctX).attr('cy',WORK_Y).attr('r',0)
-    .attr('fill',NC).attr('stroke','#fff').attr('stroke-width',1.5)
-    .transition().duration(220).delay(1750).attr('r',4.5);
-  const ctg = g.append('g').attr('opacity',0);
-  ctg.append('text').attr('x',ctX).attr('y',WORK_Y-11).attr('text-anchor','end')
-    .attr('font-family','DM Sans,sans-serif').attr('font-size','8.5px')
-    .attr('font-weight','500').attr('fill',NC).text('ConTech ★');
-  ctg.append('text').attr('x',ctX).attr('y',WORK_Y-1).attr('text-anchor','end')
-    .attr('font-family','DM Sans,sans-serif').attr('font-size','7.5px')
-    .attr('fill',ST).text('1st Prize');
-  ctg.transition().duration(280).delay(2000).attr('opacity',1);
 })();
 
 // ═══════════════════════════════════════════════
