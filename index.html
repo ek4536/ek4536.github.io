@@ -47,16 +47,16 @@
     .hero { margin-bottom: 2.8rem; max-width: 660px; }
     .hero h1 {
       font-size: clamp(1.9rem, 3.8vw, 2.8rem);
-      font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
+      font-weight: 600; line-height: 1.2; letter-spacing: -0.02em;
       color: var(--ink); margin-bottom: 0.3rem;
     }
     .hero-role {
-      font-size: 0.9rem; color: var(--stone); margin-bottom: 1.6rem;
+      font-size: 1rem; color: var(--stone); margin-bottom: 1.6rem;
       letter-spacing: 0.02em;
     }
     .hero-bio {
-      font-size: 1rem; color: #374151; line-height: 1.78;
-      margin-bottom: 0.9rem;
+      font-size: 1rem; color: #374151; line-height: 2;
+      margin-bottom: 1.5rem;
     }
     .btns { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.7rem; }
     .btn {
@@ -94,8 +94,8 @@
 
     /* PROJECTS */
     .section-label {
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--fern); margin-bottom: 1.4rem;
+      font-size: 3rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink); margin-bottom: 1.4rem;
     }
     .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1rem; }
     .card {
@@ -341,10 +341,10 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
   // Track labels
   g.append('text').attr('x', SPINE - 9).attr('y', 18).attr('text-anchor','end')
-    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('font-weight','600')
+    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
     .attr('fill', ST).attr('letter-spacing','0.08em').text('EDUCATION');
   g.append('text').attr('x', SPINE + 9).attr('y', 18).attr('text-anchor','start')
-    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('font-weight','600')
+    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
     .attr('fill', ST).attr('letter-spacing','0.08em').text('WORK');
 
   // Spine — animates downward
@@ -355,7 +355,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
   // "now" marker
   g.append('text').attr('x', SPINE + 5).attr('y', nowY + 4)
-    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#9ca3af')
+    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('fill','#9ca3af')
     .attr('opacity', 0).text('now')
     .transition().duration(300).delay(1200).attr('opacity', 1);
 
@@ -366,7 +366,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
       .attr('y1', gy).attr('y2', gy).attr('stroke','#d1d5db').attr('stroke-width', 1);
     g.append('text').attr('x', SPINE - 8).attr('y', gy + 4)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','10px').attr('fill','#9ca3af').text(yr);
+      .attr('font-size','8px').attr('fill','#9ca3af').text(yr);
   });
 
   // EDUCATION events — dots on spine, labels to the left (right-anchored)
@@ -384,11 +384,11 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
     const tg = g.append('g').attr('opacity', 0);
     tg.append('text').attr('x', SPINE - 10).attr('y', ey - 3)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','11px').attr('font-weight','500').attr('fill', ev.color)
+      .attr('font-size','9px').attr('font-weight','500').attr('fill', ev.color)
       .text(ev.name);
     tg.append('text').attr('x', SPINE - 10).attr('y', ey + 11)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','10px').attr('fill', ST)
+      .attr('font-size','8px').attr('fill', ST)
       .text(ev.sub);
     tg.transition().duration(260).delay(delay + 200).attr('opacity', 1);
   });
@@ -413,11 +413,11 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
     const tg = g.append('g').attr('opacity', 0);
     tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 2)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','11px').attr('font-weight','500').attr('fill', ph.color)
+      .attr('font-size','9px').attr('font-weight','500').attr('fill', ph.color)
       .text(ph.name);
     tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 16)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','10px').attr('fill', ST)
+      .attr('font-size','8px').attr('fill', ST)
       .text(ph.sub);
     tg.transition().duration(260).delay(delay + 300).attr('opacity', 1);
   });
