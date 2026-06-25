@@ -94,7 +94,7 @@
 
     /* PROJECTS */
     .section-label {
-      font-size: 3rem; font-weight: 500; letter-spacing: 0.16em;
+      font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em;
       text-transform: uppercase; color: var(--ink); margin-bottom: 1.4rem;
     }
     .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1rem; }
@@ -171,10 +171,10 @@
         <div class="leg"><div class="leg-dot" style="background:var(--nyc)"></div>New York — Urban Data Science</div>
       </div>
       <div class="tip" id="map-tip"></div>
-      <svg id="world-map" viewBox="0 0 800 340"></svg>
+      <svg id="world-map" viewBox="0 0 800 420"></svg>
     </div>
     <div class="viz-card timeline-card">
-      <svg id="timeline" viewBox="0 0 300 420"></svg>
+      <svg id="timeline" viewBox="0 0 420 540"></svg>
     </div>
   </div>
 
@@ -243,7 +243,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
 // ── WORLD MAP ──────────────────────────────────────────
 (async function() {
-  const W = 800, H = 340;
+  const W = 800, H = 420;
   const svg = d3.select('#world-map');
   const tip = d3.select('#map-tip');
 
@@ -252,7 +252,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
   catch(e) { return; }
 
   const proj = d3.geoNaturalEarth1()
-    .scale(118).rotate([-155, 0]).translate([W/2, H/2+10]);
+    .scale(130).rotate([-155, 0]).translate([W/2, H/2]);
   const path = d3.geoPath().projection(proj);
 
   svg.append('path').datum({type:'Sphere'}).attr('d', path)
@@ -266,7 +266,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
   const nycXY   = proj([-74.01, 40.71]);
 
   const cpx = (seoulXY[0] + nycXY[0]) / 2;
-  const cpy = Math.min(seoulXY[1], nycXY[1]) - 50;
+  const cpy = Math.min(seoulXY[1], nycXY[1]) - 55;
   const arcEl = svg.append('path')
     .attr('d', `M${seoulXY[0]},${seoulXY[1]} Q${cpx},${cpy} ${nycXY[0]},${nycXY[1]}`)
     .attr('fill','none').attr('stroke','#9ca3af').attr('stroke-width',1.2).attr('opacity',0.8);
@@ -312,6 +312,55 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
       .on('mouseleave', () => tip.style('opacity',0));
   });
 
+  // ── ZOOM INSETS ──
+  const insets = [
+    { lon:126.98, lat:37.57, cx:115, cy:355, r:52, color:SC, label:'Seoul',    proj: d3.geoNaturalEarth1().scale(2200).rotate([-126.98,-37.57]).translate([115,355]) },
+    { lon:-74.01, lat:40.71, cx:685, cy:355, r:52, color:NC, label:'New York', proj: d3.geoNaturalEarth1().scale(2200).rotate([74.01,-40.71]).translate([685,355]) },
+  ];
+
+  const countries = topojson.feature(world, world.objects.countries).features;
+
+  insets.forEach((ins, i) => {
+    const clipId = `clip-inset-${i}`;
+    svg.append('defs').append('clipPath').attr('id', clipId)
+      .append('circle').attr('cx', ins.cx).attr('cy', ins.cy).attr('r', ins.r);
+
+    // Connector line from main dot to inset
+    const mainXY = proj([ins.lon, ins.lat]);
+    const dx = ins.cx - mainXY[0], dy = ins.cy - mainXY[1];
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    svg.append('line')
+      .attr('x1', mainXY[0]).attr('y1', mainXY[1])
+      .attr('x2', ins.cx - dx/dist*ins.r).attr('y2', ins.cy - dy/dist*ins.r)
+      .attr('stroke', ins.color).attr('stroke-width', 0.8)
+      .attr('stroke-dasharray','3,2').attr('opacity', 0.5);
+
+    // Inset background
+    svg.append('circle').attr('cx', ins.cx).attr('cy', ins.cy).attr('r', ins.r)
+      .attr('fill','#eaf4f0').attr('stroke', ins.color).attr('stroke-width', 1.2).attr('opacity',0.9);
+
+    // Zoomed map inside clip
+    const insetPath = d3.geoPath().projection(ins.proj);
+    svg.append('g').attr('clip-path', `url(#${clipId})`)
+      .selectAll('path').data(countries).enter().append('path')
+      .attr('d', insetPath)
+      .attr('fill','#d0e8db').attr('stroke','#aacfba').attr('stroke-width', 0.6);
+
+    // City dot in inset
+    const [ix, iy] = ins.proj([ins.lon, ins.lat]);
+    svg.append('circle').attr('cx', ix).attr('cy', iy).attr('r', 4)
+      .attr('clip-path', `url(#${clipId})`)
+      .attr('fill', ins.color).attr('stroke','#fff').attr('stroke-width',1.5).attr('opacity',0);
+
+    // Border ring on top
+    svg.append('circle').attr('cx', ins.cx).attr('cy', ins.cy).attr('r', ins.r)
+      .attr('fill','none').attr('stroke', ins.color).attr('stroke-width', 1.2);
+
+    // Animate inset appearance
+    svg.selectAll(`circle[clip-path="url(#${clipId})"]`)
+      .transition().duration(300).delay(1600 + i*200).attr('opacity',1);
+  });
+
   function pulse() {
     svg.selectAll('circle[r="11"]')
       .transition().duration(1400).ease(d3.easeSinInOut).attr('r',15).attr('opacity',0.05)
@@ -320,18 +369,20 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
   setTimeout(pulse, 1800);
 })();
 
-// ── VERTICAL TIMELINE ──────────────────────────────────
+// ── VERTICAL TIMELINE — two separate spines ────────────
 (function() {
-  const W = 300, H = 420;
   const svg = d3.select('#timeline');
   const g   = svg.append('g');
 
-  const NOW     = new Date(2026, 4);  // May 2026
+  const NOW     = new Date(2026, 4);   // May 2026
   const T_START = new Date(2019, 0).getTime();
-  const T_END   = new Date(2027, 0).getTime(); // Jan 2027 — gives breathing room
-  const Y_TOP   = 30;
-  const Y_BOT   = 390;
-  const SPINE   = 118; // x of the center spine
+  const T_END   = new Date(2028, 6).getTime(); // Jul 2028 — "now" sits visually mid-chart
+  const Y_TOP   = 36;
+  const Y_BOT   = 500;
+
+  const EDU_X  = 100;  // education spine x
+  const WORK_X = 300;  // work spine x
+  const MID_X  = (EDU_X + WORK_X) / 2; // year label column
 
   function y(date) {
     return Y_TOP + (date.getTime() - T_START) / (T_END - T_START) * (Y_BOT - Y_TOP);
@@ -340,36 +391,50 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
   const nowY = y(NOW);
 
   // Track labels
-  g.append('text').attr('x', SPINE - 9).attr('y', 18).attr('text-anchor','end')
-    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
-    .attr('fill', ST).attr('letter-spacing','0.08em').text('EDUCATION');
-  g.append('text').attr('x', SPINE + 9).attr('y', 18).attr('text-anchor','start')
-    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
-    .attr('fill', ST).attr('letter-spacing','0.08em').text('WORK');
-
-  // Spine — animates downward
-  g.append('line')
-    .attr('x1', SPINE).attr('x2', SPINE).attr('y1', Y_TOP).attr('y2', Y_TOP)
-    .attr('stroke','#d1d5db').attr('stroke-width', 1)
-    .transition().duration(1000).delay(200).attr('y2', nowY);
-
-  // "now" marker
-  g.append('text').attr('x', SPINE + 5).attr('y', nowY + 4)
-    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('fill','#9ca3af')
-    .attr('opacity', 0).text('now')
-    .transition().duration(300).delay(1200).attr('opacity', 1);
-
-  // Year ticks + labels (select key years only to avoid clutter)
-  [2019, 2021, 2023, 2025].forEach(yr => {
-    const gy = y(new Date(yr, 0));
-    g.append('line').attr('x1', SPINE-4).attr('x2', SPINE+4)
-      .attr('y1', gy).attr('y2', gy).attr('stroke','#d1d5db').attr('stroke-width', 1);
-    g.append('text').attr('x', SPINE - 8).attr('y', gy + 4)
-      .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','8px').attr('fill','#9ca3af').text(yr);
+  ['EDUCATION', 'WORK'].forEach((label, i) => {
+    const x = i === 0 ? EDU_X : WORK_X;
+    g.append('text').attr('x', x).attr('y', 20).attr('text-anchor','middle')
+      .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('font-weight','600')
+      .attr('fill', ST).attr('letter-spacing','0.1em').text(label);
   });
 
-  // EDUCATION events — dots on spine, labels to the left (right-anchored)
+  // Year grid lines (subtle horizontal spans between both spines)
+  [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].forEach(yr => {
+    const gy = y(new Date(yr, 0));
+    g.append('line').attr('x1', EDU_X).attr('x2', WORK_X)
+      .attr('y1', gy).attr('y2', gy)
+      .attr('stroke','#f0f0f0').attr('stroke-width', 1);
+    g.append('text').attr('x', MID_X).attr('y', gy - 3)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif')
+      .attr('font-size','10px').attr('fill','#c0c7cc').text(yr);
+  });
+
+  // Education spine (solid → now, dashed extension)
+  g.append('line').attr('x1',EDU_X).attr('x2',EDU_X).attr('y1',Y_TOP).attr('y2',Y_TOP)
+    .attr('stroke','#d1d5db').attr('stroke-width',1.5)
+    .transition().duration(1000).delay(200).attr('y2', nowY);
+  g.append('line').attr('x1',EDU_X).attr('x2',EDU_X).attr('y1',nowY).attr('y2',Y_BOT)
+    .attr('stroke','#e5e7eb').attr('stroke-width',1).attr('stroke-dasharray','4,3');
+
+  // Work spine (solid → now, dashed extension)
+  g.append('line').attr('x1',WORK_X).attr('x2',WORK_X).attr('y1',Y_TOP).attr('y2',Y_TOP)
+    .attr('stroke','#d1d5db').attr('stroke-width',1.5)
+    .transition().duration(1000).delay(200).attr('y2', nowY);
+  g.append('line').attr('x1',WORK_X).attr('x2',WORK_X).attr('y1',nowY).attr('y2',Y_BOT)
+    .attr('stroke','#e5e7eb').attr('stroke-width',1).attr('stroke-dasharray','4,3');
+
+  // "now" tick + label
+  [EDU_X, WORK_X].forEach(sx => {
+    g.append('line').attr('x1',sx-6).attr('x2',sx+6).attr('y1',nowY).attr('y2',nowY)
+      .attr('stroke','#9ca3af').attr('stroke-width',1.5).attr('opacity',0)
+      .transition().duration(300).delay(1200).attr('opacity',1);
+  });
+  g.append('text').attr('x', MID_X).attr('y', nowY + 4)
+    .attr('text-anchor','middle').attr('font-family','Inter,sans-serif')
+    .attr('font-size','10px').attr('fill','#9ca3af').attr('opacity',0).text('now')
+    .transition().duration(300).delay(1200).attr('opacity',1);
+
+  // EDUCATION events — dots on EDU spine, labels to the left
   const eduEvents = [
     { date: new Date(2019,8), name:'B.Arch Graduate',     sub:'Hanyang Univ.',      color:'#6b7280' },
     { date: new Date(2025,5), name:'NYU MS',              sub:'Urban Data Science', color: NC       },
@@ -378,47 +443,45 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
   eduEvents.forEach((ev, i) => {
     const ey = y(ev.date), delay = 450 + i * 380;
-    g.append('circle').attr('cx', SPINE).attr('cy', ey).attr('r', 0)
-      .attr('fill', ev.color).attr('stroke','#fff').attr('stroke-width', 1.5)
-      .transition().duration(240).delay(delay).attr('r', 4.5);
+    g.append('circle').attr('cx', EDU_X).attr('cy', ey).attr('r', 0)
+      .attr('fill', ev.color).attr('stroke','#fff').attr('stroke-width',1.5)
+      .transition().duration(240).delay(delay).attr('r', 5);
     const tg = g.append('g').attr('opacity', 0);
-    tg.append('text').attr('x', SPINE - 10).attr('y', ey - 3)
+    tg.append('text').attr('x', EDU_X - 12).attr('y', ey - 3)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','9px').attr('font-weight','500').attr('fill', ev.color)
+      .attr('font-size','11px').attr('font-weight','500').attr('fill', ev.color)
       .text(ev.name);
-    tg.append('text').attr('x', SPINE - 10).attr('y', ey + 11)
+    tg.append('text').attr('x', EDU_X - 12).attr('y', ey + 12)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','8px').attr('fill', ST)
-      .text(ev.sub);
+      .attr('font-size','10px').attr('fill', ST).text(ev.sub);
     tg.transition().duration(260).delay(delay + 200).attr('opacity', 1);
   });
 
-  // WORK phases — bars to the right of spine, labels right-anchored
+  // WORK phases — bars on WORK spine, labels to the right
   const workPhases = [
     { start: new Date(2020,0), end: new Date(2023,5), color:SC, name:'Gansam Architects',  sub:'Architect'         },
     { start: new Date(2023,5), end: new Date(2025,5), color:SC, name:'Coupang',             sub:'Logistics Launch'  },
     { start: new Date(2025,5), end: NOW,              color:NC, name:'NYU Planning Intern', sub:'Strategic Assess.' },
   ];
 
-  const BAR_X = SPINE + 6, BAR_W = 4;
+  const BAR_W = 5;
   workPhases.forEach((ph, i) => {
     const y1 = y(ph.start), y2 = y(ph.end), delay = 650 + i * 380;
-    g.append('rect').attr('x', BAR_X).attr('y', y1)
+    g.append('rect').attr('x', WORK_X - BAR_W/2).attr('y', y1)
       .attr('width', BAR_W).attr('height', 0)
       .attr('fill', ph.color).attr('rx', 2).attr('opacity', 0.88)
       .transition().duration(600).delay(delay).attr('height', y2 - y1);
-    g.append('circle').attr('cx', BAR_X + BAR_W/2).attr('cy', y1).attr('r', 0)
-      .attr('fill', ph.color).attr('stroke','#fff').attr('stroke-width', 1.5)
-      .transition().duration(220).delay(delay).attr('r', 4);
+    g.append('circle').attr('cx', WORK_X).attr('cy', y1).attr('r', 0)
+      .attr('fill', ph.color).attr('stroke','#fff').attr('stroke-width',1.5)
+      .transition().duration(220).delay(delay).attr('r', 5);
     const tg = g.append('g').attr('opacity', 0);
-    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 2)
+    tg.append('text').attr('x', WORK_X + 14).attr('y', y1 + 2)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','9px').attr('font-weight','500').attr('fill', ph.color)
+      .attr('font-size','11px').attr('font-weight','500').attr('fill', ph.color)
       .text(ph.name);
-    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 16)
+    tg.append('text').attr('x', WORK_X + 14).attr('y', y1 + 16)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','8px').attr('fill', ST)
-      .text(ph.sub);
+      .attr('font-size','10px').attr('fill', ST).text(ph.sub);
     tg.transition().duration(260).delay(delay + 300).attr('opacity', 1);
   });
 })();
