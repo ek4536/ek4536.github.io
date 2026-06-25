@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eunji Kim</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
   <style>
@@ -13,133 +13,128 @@
       --moss:   #2d6a4f;
       --fern:   #40916c;
       --sage:   #74c69d;
-      --mist:   #d8f3dc;
-      --cream:  #f7f5f0;
-      --paper:  #fdfcf8;
-      --ink:    #1c1c1c;
+      --cream:  #f8f9fa;
+      --paper:  #ffffff;
+      --ink:    #111827;
       --stone:  #6b7280;
-      --border: #e2ede6;
+      --border: #e5e7eb;
       --seoul:  #b45309;
       --nyc:    #2d6a4f;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; font-weight: 300; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; font-weight: 400; }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
       position: fixed; top: 0; right: 0; z-index: 100;
-      display: flex; gap: 2.5rem; padding: 1.4rem 5%;
+      display: flex; gap: 2rem; padding: 1.2rem 5%;
     }
     nav a {
-      font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
+      font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--stone); text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.18s;
     }
-    nav a:hover, nav a.active { color: var(--forest); }
+    nav a:hover, nav a.active { color: var(--ink); }
 
-    /* ── PAGE SECTIONS ── */
+    /* PAGES */
     .page { min-height: 100vh; padding: 5rem 5% 4rem; max-width: 1100px; margin: 0 auto; }
-    #about  { padding-top: 7rem; }
-    #projects { padding-top: 6rem; border-top: 1px solid var(--border); }
-    #contact  { padding-top: 6rem; border-top: 1px solid var(--border); }
+    #about    { padding-top: 7rem; }
+    #projects { padding-top: 5rem; border-top: 1px solid var(--border); }
+    #contact  { padding-top: 5rem; border-top: 1px solid var(--border); }
 
-    /* ── HERO ── */
-    .hero { margin-bottom: 3.5rem; }
-    .hero-label {
-      font-size: 0.72rem; font-weight: 400; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--stone); margin-bottom: 1.2rem;
-    }
+    /* HERO */
+    .hero { margin-bottom: 2.8rem; max-width: 660px; }
     .hero h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-      font-weight: normal; line-height: 1.15;
-      color: var(--forest); margin-bottom: 0.1rem;
+      font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+      font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 0.3rem;
     }
-    .hero h1 .tagline { color: var(--fern); font-style: italic; display: block; }
-    .hero-bullets { margin: 1.6rem 0 2rem; list-style: none; }
-    .hero-bullets li {
-      font-size: 0.9rem; color: var(--stone); padding: 0.25rem 0;
-      display: flex; gap: 0.6rem; align-items: baseline;
+    .hero-role {
+      font-size: 0.8rem; color: var(--stone); margin-bottom: 1.6rem;
+      letter-spacing: 0.02em;
     }
-    .hero-bullets li::before { content: '–'; color: var(--sage); flex-shrink: 0; }
-    .btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .hero-bio {
+      font-size: 0.91rem; color: #374151; line-height: 1.78;
+      margin-bottom: 0.85rem;
+    }
+    .btns { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.7rem; }
     .btn {
-      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.06em;
       text-transform: uppercase; text-decoration: none;
-      padding: 0.65rem 1.4rem; border-radius: 2px; transition: all 0.2s;
+      padding: 0.58rem 1.25rem; border-radius: 3px; transition: all 0.16s;
     }
-    .btn-fill { background: var(--forest); color: #fff; }
-    .btn-fill:hover { background: var(--moss); }
-    .btn-ghost { border: 1px solid #c4cfc8; color: var(--stone); }
-    .btn-ghost:hover { border-color: var(--moss); color: var(--moss); }
+    .btn-fill  { background: var(--ink); color: #fff; }
+    .btn-fill:hover  { background: var(--forest); }
+    .btn-ghost { border: 1px solid #d1d5db; color: var(--stone); }
+    .btn-ghost:hover { border-color: #9ca3af; color: var(--ink); }
 
-    /* ── VIZ CARDS ── */
+    /* VIZ */
+    .viz-row { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
     .viz-card {
       background: var(--cream); border: 1px solid var(--border);
-      border-radius: 4px; overflow: hidden; position: relative; margin-bottom: 1rem;
+      border-radius: 4px; overflow: hidden; position: relative;
     }
-    .viz-card svg { display: block; width: 100%; }
+    .map-card      { flex: 3; }
+    .timeline-card { flex: 1.4; }
+    .viz-card svg  { display: block; width: 100%; }
     .tip {
       position: absolute; pointer-events: none; opacity: 0;
-      background: var(--paper); border: 1px solid var(--border); border-radius: 4px;
-      padding: 0.45rem 0.7rem; font-size: 0.75rem; color: var(--ink);
+      background: #fff; border: 1px solid var(--border); border-radius: 3px;
+      padding: 0.4rem 0.65rem; font-size: 0.73rem; color: var(--ink);
       line-height: 1.5; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      max-width: 190px; transition: opacity 0.15s; z-index: 10;
+      max-width: 180px; transition: opacity 0.12s; z-index: 10;
     }
-
-    /* ── LEGEND ── */
     .map-legend {
-      display: flex; gap: 1.8rem; padding: 0.9rem 1.2rem;
+      display: flex; gap: 1.6rem; padding: 0.7rem 1rem;
       border-bottom: 1px solid var(--border);
     }
-    .leg { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: var(--stone); }
-    .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .leg { display: flex; align-items: center; gap: 0.38rem; font-size: 0.71rem; color: var(--stone); }
+    .leg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-    /* ── PROJECTS ── */
-    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1rem; }
+    /* PROJECTS */
+    .section-label {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--fern); margin-bottom: 1.4rem;
+    }
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1rem; }
     .card {
       background: var(--cream); border: 1px solid var(--border); border-radius: 4px;
-      padding: 1.6rem; display: flex; flex-direction: column;
-      transition: box-shadow 0.2s, transform 0.2s;
+      padding: 1.4rem; display: flex; flex-direction: column;
+      transition: box-shadow 0.18s, transform 0.14s;
     }
-    .card:hover { box-shadow: 0 4px 20px rgba(26,61,43,0.09); transform: translateY(-2px); }
-    .card-date { font-size: 0.65rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.35rem; }
-    .card h3 { font-size: 0.95rem; font-weight: 500; color: var(--forest); margin-bottom: 0.5rem; line-height: 1.35; }
-    .card p { font-size: 0.83rem; color: #4b5563; line-height: 1.65; flex: 1; margin-bottom: 1rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.9rem; }
-    .tag { font-size: 0.65rem; font-weight: 500; background: #e8f5ee; border: 1px solid #b7e4c7; color: var(--moss); padding: 0.12rem 0.45rem; border-radius: 2px; }
-    .badge { font-size: 0.65rem; font-weight: 500; background: #fef9c3; border: 1px solid #fde047; color: #713f12; padding: 0.12rem 0.45rem; border-radius: 2px; margin-bottom: 0.5rem; display: inline-block; }
-    .card-link { font-size: 0.72rem; font-weight: 500; color: var(--moss); text-decoration: none; border-bottom: 1px solid var(--sage); padding-bottom: 1px; }
-    .card-link:hover { color: var(--forest); }
+    .card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.07); transform: translateY(-2px); }
+    .card-date { font-size: 0.62rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .card h3 { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-bottom: 0.42rem; line-height: 1.35; }
+    .card p { font-size: 0.81rem; color: #4b5563; line-height: 1.65; flex: 1; margin-bottom: 0.85rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-bottom: 0.75rem; }
+    .tag { font-size: 0.61rem; font-weight: 500; background: #f3f4f6; border: 1px solid #e5e7eb; color: #4b5563; padding: 0.1rem 0.38rem; border-radius: 2px; }
+    .badge { font-size: 0.61rem; font-weight: 500; background: #fef9c3; border: 1px solid #fde047; color: #713f12; padding: 0.1rem 0.38rem; border-radius: 2px; margin-bottom: 0.4rem; display: inline-block; }
+    .card-link { font-size: 0.7rem; font-weight: 500; color: var(--moss); text-decoration: none; }
+    .card-link:hover { color: var(--forest); text-decoration: underline; }
 
-    /* ── SKILLS ── */
-    .skills-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin-top: 0; }
-    .skill-cat { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 1.3rem 1.5rem; }
-    .skill-cat-title { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem; }
-    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.32rem 0; border-bottom: 1px solid var(--border); }
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+    .skill-cat { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.3rem; }
+    .skill-cat-title { font-size: 0.61rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.85rem; }
+    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.26rem 0; border-bottom: 1px solid var(--border); }
     .skill-row:last-child { border-bottom: none; }
-    .skill-name { font-size: 0.82rem; color: var(--ink); }
+    .skill-name { font-size: 0.78rem; color: var(--ink); }
     .skill-dots { display: flex; gap: 3px; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot { width: 5px; height: 5px; border-radius: 50%; }
 
-    /* ── SECTION LABEL ── */
-    .section-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fern); margin-bottom: 0.5rem; }
-    h2 { font-family: 'DM Serif Display', serif; font-size: 1.9rem; font-weight: normal; color: var(--forest); margin-bottom: 2rem; }
-
-    /* ── CONTACT ── */
+    /* CONTACT */
     #contact { min-height: 50vh; }
-    .contact-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
-    .contact-links a {
-      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--moss); text-decoration: none; border-bottom: 1px solid var(--sage); padding-bottom: 2px;
-    }
-    .contact-links a:hover { color: var(--forest); border-color: var(--forest); }
+    h2 { font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: 1.6rem; letter-spacing: -0.01em; }
+    .contact-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .contact-links a { font-size: 0.79rem; color: var(--moss); text-decoration: none; }
+    .contact-links a:hover { color: var(--forest); text-decoration: underline; }
 
-    footer { padding: 2rem 5%; font-size: 0.7rem; color: var(--stone); border-top: 1px solid var(--border); }
+    footer { padding: 1.6rem 5%; font-size: 0.67rem; color: var(--stone); border-top: 1px solid var(--border); }
 
-    @media (max-width: 600px) {
-      .skills-grid { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      .viz-row { flex-direction: column; }
+      .skills-grid { grid-template-columns: repeat(2,1fr); }
       nav { gap: 1.2rem; }
     }
   </style>
@@ -152,22 +147,14 @@
   <a href="#contact">Contact</a>
 </nav>
 
-<!-- ══════════════════════════════════════════
-     PAGE 1 · ABOUT
-══════════════════════════════════════════ -->
+<!-- PAGE 1 · ABOUT -->
 <section class="page" id="about">
 
-  <!-- Hero -->
   <div class="hero">
-    <div class="hero-label">Urban Data Scientist &amp; Architect</div>
-    <h1>
-      Eunji Kim
-      <span class="tagline">Spatial insights, data-driven impact.</span>
-    </h1>
-    <ul class="hero-bullets">
-      <li>MS Candidate in Urban Data Science at New York University.</li>
-      <li>Six years of experience bridging architectural design, logistics planning, and data analytics.</li>
-    </ul>
+    <h1>Eunji Kim</h1>
+    <p class="hero-role">Urban Data Scientist &amp; Architect &middot; NYU</p>
+    <p class="hero-bio">I am an M.S. candidate in Urban Data Science at New York University, bridging the gap between the physical built environment and data-driven insights.</p>
+    <p class="hero-bio">With the perspective of an architect, I deconstruct and restructure complex urban systems quantitatively to design human-centric environments. With the perspective of a logistics planner, I focus on optimizing the movement of people and goods to generate efficient, sustainable flows across cities. Ultimately, I leverage spatial computing and machine learning to build smarter, more resilient urban futures.</p>
     <div class="btns">
       <a href="#projects" class="btn btn-fill">View Projects</a>
       <a href="https://linkedin.com/in/ejkimm" target="_blank" class="btn btn-ghost">LinkedIn</a>
@@ -175,19 +162,19 @@
     </div>
   </div>
 
-  <!-- Map -->
-  <div class="viz-card">
-    <div class="map-legend">
-      <div class="leg"><div class="leg-dot" style="background:var(--seoul)"></div>Seoul — Architecture &amp; Logistics</div>
-      <div class="leg"><div class="leg-dot" style="background:var(--nyc)"></div>New York — Urban Data Science</div>
+  <!-- Map + Vertical Timeline -->
+  <div class="viz-row">
+    <div class="viz-card map-card">
+      <div class="map-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--seoul)"></div>Seoul — Architecture &amp; Logistics</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--nyc)"></div>New York — Urban Data Science</div>
+      </div>
+      <div class="tip" id="map-tip"></div>
+      <svg id="world-map" viewBox="0 0 800 280"></svg>
     </div>
-    <div class="tip" id="map-tip"></div>
-    <svg id="world-map" viewBox="0 0 800 280"></svg>
-  </div>
-
-  <!-- Timeline -->
-  <div class="viz-card">
-    <svg id="timeline" viewBox="0 0 800 290"></svg>
+    <div class="viz-card timeline-card">
+      <svg id="timeline" viewBox="0 0 300 420"></svg>
+    </div>
   </div>
 
   <!-- Skills -->
@@ -195,12 +182,9 @@
 
 </section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 2 · PROJECTS
-══════════════════════════════════════════ -->
+<!-- PAGE 2 · PROJECTS -->
 <section class="page" id="projects">
   <div class="section-label">Projects</div>
-  <h2>Selected Work</h2>
   <div class="proj-grid">
 
     <div class="card">
@@ -239,13 +223,11 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 3 · CONTACT
-══════════════════════════════════════════ -->
+<!-- PAGE 3 · CONTACT -->
 <section class="page" id="contact">
   <div class="section-label">Contact</div>
   <h2>Get in Touch</h2>
-  <p style="font-size:0.95rem;color:var(--stone);max-width:480px;">Open to research collaborations, internships, and full-time roles in urban data science.</p>
+  <p style="font-size:0.88rem;color:var(--stone);max-width:440px;">Open to research collaborations, internships, and full-time roles in urban data science.</p>
   <div class="contact-links">
     <a href="mailto:eunji.kim@nyu.edu">eunji.kim@nyu.edu</a>
     <a href="https://linkedin.com/in/ejkimm" target="_blank">LinkedIn</a>
@@ -256,11 +238,9 @@
 <footer>© 2026 Eunji Kim</footer>
 
 <script>
-const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
+const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
-// ═══════════════════════════════════════════════
-// WORLD MAP — Pacific-centered: Seoul left, NYC right
-// ═══════════════════════════════════════════════
+// ── WORLD MAP ──────────────────────────────────────────
 (async function() {
   const W = 800, H = 280;
   const svg = d3.select('#world-map');
@@ -270,25 +250,20 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
   try { world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'); }
   catch(e) { return; }
 
-  // Rotate to Pacific center so Seoul(127°E) is left, NYC(74°W) is right
   const proj = d3.geoNaturalEarth1()
-    .scale(118)
-    .rotate([-155, 0])   // center at 155°E (Pacific) → Seoul left, Americas right
-    .translate([W / 2, H / 2 + 10]);
+    .scale(118).rotate([-155, 0]).translate([W/2, H/2+10]);
   const path = d3.geoPath().projection(proj);
 
   svg.append('path').datum({type:'Sphere'}).attr('d', path)
     .attr('fill','#eaf4f0').attr('stroke', BD).attr('stroke-width', 0.5);
-
   svg.append('g').selectAll('path')
     .data(topojson.feature(world, world.objects.countries).features)
     .enter().append('path').attr('d', path)
-    .attr('fill','#d8ece2').attr('stroke','#b7dfc8').attr('stroke-width', 0.4);
+    .attr('fill','#ddeee6').attr('stroke','#c3ddd0').attr('stroke-width', 0.4);
 
   const seoulXY = proj([126.98, 37.57]);
   const nycXY   = proj([-74.01, 40.71]);
 
-  // Bezier arc Seoul → NYC
   const cpx = (seoulXY[0] + nycXY[0]) / 2;
   const cpy = Math.min(seoulXY[1], nycXY[1]) - 50;
   const arcEl = svg.append('path')
@@ -298,7 +273,6 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
   arcEl.attr('stroke-dasharray', al).attr('stroke-dashoffset', al)
     .transition().duration(1200).delay(300).attr('stroke-dashoffset', 0);
 
-  // Arrow at NYC
   const ang = Math.atan2(nycXY[1]-cpy, nycXY[0]-cpx) * 180/Math.PI + 90;
   svg.append('path').attr('d', d3.symbol().type(d3.symbolTriangle).size(22)())
     .attr('transform',`translate(${nycXY[0]},${nycXY[1]}) rotate(${ang})`)
@@ -306,9 +280,9 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
     .transition().duration(300).delay(1450).attr('opacity',0.8);
 
   const cities = [
-    { name:'Seoul', xy: seoulXY, color: SC, anchor:'end',
+    { name:'Seoul',    xy: seoulXY, color: SC, anchor:'end',
       desc:'Seoul, South Korea\nGansam Architects · 2020–2023\nCoupang · 2023–2025' },
-    { name:'New York', xy: nycXY, color: NC, anchor:'start',
+    { name:'New York', xy: nycXY,   color: NC, anchor:'start',
       desc:'New York City, USA\nNYU Urban Data Science · 2025–\nNYU Planning Intern · 2025–' },
   ];
 
@@ -316,22 +290,19 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
     const [cx, cy] = c.xy;
     const delay = i === 0 ? 150 : 1550;
     const g = svg.append('g').style('cursor','pointer');
-
     g.append('circle').attr('cx',cx).attr('cy',cy).attr('r',11).attr('fill',c.color).attr('opacity',0.12);
     g.append('circle').attr('cx',cx).attr('cy',cy).attr('r',0)
       .attr('fill',c.color).attr('stroke','#fff').attr('stroke-width',1.8)
       .transition().duration(320).delay(delay).attr('r',5.5);
-
     const lx = i === 0 ? cx - 9 : cx + 9;
     g.append('text').attr('x',lx).attr('y',cy - 9)
       .attr('text-anchor', c.anchor)
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','10px')
+      .attr('font-family','Inter,sans-serif').attr('font-size','10px')
       .attr('font-weight','500').attr('fill',c.color).attr('opacity',0)
       .text(c.name)
       .transition().duration(300).delay(delay+180).attr('opacity',1);
-
     g.on('mousemove', function(ev) {
-        const r = document.querySelector('.viz-card').getBoundingClientRect();
+        const r = document.querySelector('.map-card').getBoundingClientRect();
         tip.style('opacity',1)
           .style('left',(ev.clientX-r.left+12)+'px')
           .style('top',(ev.clientY-r.top-8)+'px')
@@ -348,135 +319,110 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
   setTimeout(pulse, 1800);
 })();
 
-// ═══════════════════════════════════════════════
-// TIMELINE — Education + Work, piecewise scale
-// ═══════════════════════════════════════════════
+// ── VERTICAL TIMELINE ──────────────────────────────────
 (function() {
-  const W = 800, H = 230;
-  const ml = 88, mr = 24, mt = 30;
-  const iW = W - ml - mr;
+  const W = 300, H = 420;
   const svg = d3.select('#timeline');
-  const g = svg.append('g').attr('transform',`translate(${ml},${mt})`);
+  const g   = svg.append('g');
 
-  // Piecewise scale: 2019–2023 gets 30% of width, 2023–2026.5 gets 70%
-  // → recent years are spread wider, older years compressed
-  const PIVOT  = new Date(2023, 0);
+  const NOW     = new Date(2026, 4);  // May 2026
   const T_START = new Date(2019, 0).getTime();
-  const T_PIVOT = PIVOT.getTime();
-  const T_END   = new Date(2026, 8).getTime();
-  const NOW     = new Date(2026, 4);
+  const T_END   = new Date(2027, 0).getTime(); // Jan 2027 — gives breathing room
+  const Y_TOP   = 30;
+  const Y_BOT   = 390;
+  const SPINE   = 118; // x of the center spine
 
-  function x(date) {
-    const t = date.getTime();
-    if (t <= T_PIVOT) {
-      return (t - T_START) / (T_PIVOT - T_START) * iW * 0.30;
-    } else {
-      return iW * 0.30 + (t - T_PIVOT) / (T_END - T_PIVOT) * iW * 0.70;
-    }
+  function y(date) {
+    return Y_TOP + (date.getTime() - T_START) / (T_END - T_START) * (Y_BOT - Y_TOP);
   }
 
-  const EDU_Y  = 72;
-  const WORK_Y = 195;
-  const GRID_TOP = 20, GRID_BOT = 215;
+  const nowY = y(NOW);
 
-  const gridYears = [2019, 2021, 2023, 2024, 2025, 2026];
-  gridYears.forEach(yr => {
-    const gx = x(new Date(yr, 0));
-    g.append('line').attr('x1',gx).attr('x2',gx).attr('y1',GRID_TOP).attr('y2',GRID_BOT)
-      .attr('stroke','#e4ebe5').attr('stroke-width',1);
-    g.append('text').attr('x',gx).attr('y',GRID_BOT+16).attr('text-anchor','middle')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','10px').attr('fill',ST).text(yr);
-  });
+  // Track labels
+  g.append('text').attr('x', SPINE - 9).attr('y', 16).attr('text-anchor','end')
+    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
+    .attr('fill', ST).attr('letter-spacing','0.08em').text('EDUCATION');
+  g.append('text').attr('x', SPINE + 9).attr('y', 16).attr('text-anchor','start')
+    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
+    .attr('fill', ST).attr('letter-spacing','0.08em').text('WORK');
 
-  const nowX = x(NOW);
-  g.append('line').attr('x1',nowX).attr('x2',nowX).attr('y1',GRID_TOP).attr('y2',GRID_BOT)
-    .attr('stroke','#b0b8b4').attr('stroke-width',1).attr('stroke-dasharray','3,2');
-  g.append('text').attr('x',nowX+4).attr('y',GRID_TOP-4)
-    .attr('font-family','DM Sans,sans-serif').attr('font-size','9px').attr('fill','#9ca3af').text('now');
-
-  [['Education', EDU_Y], ['Work', WORK_Y]].forEach(([label, y]) => {
-    g.append('text').attr('x',-10).attr('y',y+4).attr('text-anchor','end')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','10px')
-      .attr('font-weight','500').attr('fill',ST).text(label);
-  });
-
-  // ── EDUCATION baseline ──
+  // Spine — animates downward
   g.append('line')
-    .attr('x1', x(new Date(2019,8))).attr('y1',EDU_Y)
-    .attr('x2', x(new Date(2019,8))).attr('y2',EDU_Y)
-    .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.5)
-    .transition().duration(900).delay(400).attr('x2', x(NOW));
+    .attr('x1', SPINE).attr('x2', SPINE).attr('y1', Y_TOP).attr('y2', Y_TOP)
+    .attr('stroke','#d1d5db').attr('stroke-width', 1)
+    .transition().duration(1000).delay(200).attr('y2', nowY);
 
-  // Education events — B.Arch below, NYU MS above, ConTech below
+  // "now" marker
+  g.append('text').attr('x', SPINE + 5).attr('y', nowY + 4)
+    .attr('font-family','Inter,sans-serif').attr('font-size','7.5px').attr('fill','#9ca3af')
+    .attr('opacity', 0).text('now')
+    .transition().duration(300).delay(1200).attr('opacity', 1);
+
+  // Year ticks + labels (select key years only to avoid clutter)
+  [2019, 2021, 2023, 2025].forEach(yr => {
+    const gy = y(new Date(yr, 0));
+    g.append('line').attr('x1', SPINE-4).attr('x2', SPINE+4)
+      .attr('y1', gy).attr('y2', gy).attr('stroke','#d1d5db').attr('stroke-width', 1);
+    g.append('text').attr('x', SPINE - 8).attr('y', gy + 3.5)
+      .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
+      .attr('font-size','7.5px').attr('fill','#9ca3af').text(yr);
+  });
+
+  // EDUCATION events — dots on spine, labels to the left (right-anchored)
   const eduEvents = [
-    { date: new Date(2019,8), name:'B.Arch Graduate',      sub:'Hanyang Univ.',      color:'#6b7280', above:false, anchor:'start' },
-    { date: new Date(2025,5), name:'NYU MS',               sub:'Urban Data Science', color:NC,        above:true,  anchor:'start' },
-    { date: new Date(2026,3), name:'ConTech Hackathon ★',  sub:'1st Prize · 2026',   color:NC,        above:false, anchor:'end'   },
+    { date: new Date(2019,8), name:'B.Arch Graduate',     sub:'Hanyang Univ.',      color:'#6b7280' },
+    { date: new Date(2025,5), name:'NYU MS',              sub:'Urban Data Science', color: NC       },
+    { date: new Date(2026,3), name:'ConTech Hackathon ★', sub:'1st Prize · 2026',   color: NC       },
   ];
-
-  g.append('line')
-    .attr('x1', x(new Date(2019,8))).attr('y1',EDU_Y)
-    .attr('x2', x(new Date(2019,8))).attr('y2',EDU_Y)
-    .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.5)
-    .transition().duration(900).delay(400).attr('x2', x(NOW));
 
   eduEvents.forEach((ev, i) => {
-    const ex = x(ev.date), delay = 500 + i*400;
-    g.append('circle').attr('cx',ex).attr('cy',EDU_Y).attr('r',0)
-      .attr('fill',ev.color).attr('stroke','#fff').attr('stroke-width',1.8)
-      .transition().duration(250).delay(delay).attr('r',5);
-    const ly = ev.above ? EDU_Y - 34 : EDU_Y + 30;
-    const sy = ev.above ? EDU_Y - 20 : EDU_Y + 44;
-    const ox = ev.anchor === 'end' ? -4 : 4;
-    const tg = g.append('g').attr('opacity',0);
-    tg.append('text').attr('x',ex+ox).attr('y',ly).attr('text-anchor',ev.anchor)
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','10.5px')
-      .attr('font-weight','500').attr('fill',ev.color).text(ev.name);
-    tg.append('text').attr('x',ex+ox).attr('y',sy).attr('text-anchor',ev.anchor)
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','9.5px')
-      .attr('fill',ST).text(ev.sub);
-    tg.transition().duration(280).delay(delay+200).attr('opacity',1);
+    const ey = y(ev.date), delay = 450 + i * 380;
+    g.append('circle').attr('cx', SPINE).attr('cy', ey).attr('r', 0)
+      .attr('fill', ev.color).attr('stroke','#fff').attr('stroke-width', 1.5)
+      .transition().duration(240).delay(delay).attr('r', 4.5);
+    const tg = g.append('g').attr('opacity', 0);
+    tg.append('text').attr('x', SPINE - 10).attr('y', ey - 2)
+      .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
+      .attr('font-size','9px').attr('font-weight','500').attr('fill', ev.color)
+      .text(ev.name);
+    tg.append('text').attr('x', SPINE - 10).attr('y', ey + 10)
+      .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
+      .attr('font-size','8px').attr('fill', ST)
+      .text(ev.sub);
+    tg.transition().duration(260).delay(delay + 200).attr('opacity', 1);
   });
 
-  // ── WORK baseline ──
-  g.append('line')
-    .attr('x1', x(new Date(2020,0))).attr('y1',WORK_Y)
-    .attr('x2', x(new Date(2020,0))).attr('y2',WORK_Y)
-    .attr('stroke','#c4cfc8').attr('stroke-width',1.5).attr('opacity',0.4)
-    .transition().duration(900).delay(400).attr('x2', x(NOW));
-
-  // Work phases — Gansam above, Coupang below, NYU above
+  // WORK phases — bars to the right of spine, labels right-anchored
   const workPhases = [
-    { start: new Date(2020,0), end: new Date(2023,5), color:SC, name:'Gansam Architects',  sub:'Architect',        above:true  },
-    { start: new Date(2023,5), end: new Date(2025,5), color:SC, name:'Coupang',             sub:'Logistics Launch', above:true  },
-    { start: new Date(2025,5), end: NOW,              color:NC, name:'NYU Planning Intern', sub:'Strategic Assess.', above:true },
+    { start: new Date(2020,0), end: new Date(2023,5), color:SC, name:'Gansam Architects',  sub:'Architect'         },
+    { start: new Date(2023,5), end: new Date(2025,5), color:SC, name:'Coupang',             sub:'Logistics Launch'  },
+    { start: new Date(2025,5), end: NOW,              color:NC, name:'NYU Planning Intern', sub:'Strategic Assess.' },
   ];
 
+  const BAR_X = SPINE + 6, BAR_W = 4;
   workPhases.forEach((ph, i) => {
-    const x1 = x(ph.start), x2 = x(ph.end), delay = 700 + i*350;
-    g.append('line')
-      .attr('x1',x1).attr('y1',WORK_Y).attr('x2',x1).attr('y2',WORK_Y)
-      .attr('stroke',ph.color).attr('stroke-width',6).attr('stroke-linecap','round').attr('opacity',0.88)
-      .transition().duration(600).delay(delay).attr('x2',x2);
-    g.append('circle').attr('cx',x1).attr('cy',WORK_Y).attr('r',0)
-      .attr('fill',ph.color).attr('stroke','#fff').attr('stroke-width',1.8)
-      .transition().duration(220).delay(delay).attr('r',5);
-    const ly = ph.above ? WORK_Y - 34 : WORK_Y + 30;
-    const sy = ph.above ? WORK_Y - 20 : WORK_Y + 44;
-    const tg = g.append('g').attr('opacity',0);
-    tg.append('text').attr('x',x1+4).attr('y',ly).attr('text-anchor','start')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','10.5px')
-      .attr('font-weight','500').attr('fill',ph.color).text(ph.name);
-    tg.append('text').attr('x',x1+4).attr('y',sy).attr('text-anchor','start')
-      .attr('font-family','DM Sans,sans-serif').attr('font-size','9.5px')
-      .attr('fill',ST).text(ph.sub);
-    tg.transition().duration(280).delay(delay+300).attr('opacity',1);
+    const y1 = y(ph.start), y2 = y(ph.end), delay = 650 + i * 380;
+    g.append('rect').attr('x', BAR_X).attr('y', y1)
+      .attr('width', BAR_W).attr('height', 0)
+      .attr('fill', ph.color).attr('rx', 2).attr('opacity', 0.88)
+      .transition().duration(600).delay(delay).attr('height', y2 - y1);
+    g.append('circle').attr('cx', BAR_X + BAR_W/2).attr('cy', y1).attr('r', 0)
+      .attr('fill', ph.color).attr('stroke','#fff').attr('stroke-width', 1.5)
+      .transition().duration(220).delay(delay).attr('r', 4);
+    const tg = g.append('g').attr('opacity', 0);
+    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 1)
+      .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
+      .attr('font-size','9px').attr('font-weight','500').attr('fill', ph.color)
+      .text(ph.name);
+    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 13)
+      .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
+      .attr('font-size','8px').attr('fill', ST)
+      .text(ph.sub);
+    tg.transition().duration(260).delay(delay + 300).attr('opacity', 1);
   });
 })();
 
-// ═══════════════════════════════════════════════
-// SKILLS GRID
-// ═══════════════════════════════════════════════
+// ── SKILLS ────────────────────────────────────────────
 (function() {
   const cats = [
     { name:'Data Analytics', color: NC, skills:[
@@ -486,7 +432,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
       {n:'ArcGIS',v:4},{n:'Pydeck / Mapbox',v:4},{n:'Spatial Modeling',v:5},{n:'Location Intelligence',v:4},
     ]},
     { name:'Data Engineering', color:'#7c3aed', skills:[
-      {n:'Apache Spark',v:3},{n:'MongoDB',v:3},{n:'Oracle',v:3},{n:'Data Pipelines',v:4},
+      {n:'MongoDB',v:3},{n:'Snowflake',v:3},{n:'Data Pipelines',v:4},
     ]},
     { name:'Visualization', color: SC, skills:[
       {n:'Tableau',v:4},{n:'Plotly / Matplotlib',v:4},{n:'Power BI',v:3},{n:'D3.js',v:3},
@@ -497,45 +443,33 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e2ede6';
   cats.forEach(cat => {
     const div = document.createElement('div');
     div.className = 'skill-cat';
-
     const title = document.createElement('div');
     title.className = 'skill-cat-title';
     title.style.color = cat.color;
     title.textContent = cat.name;
     div.appendChild(title);
-
     cat.skills.forEach(sk => {
-      const row = document.createElement('div');
-      row.className = 'skill-row';
-      const name = document.createElement('span');
-      name.className = 'skill-name';
-      name.textContent = sk.n;
-      const dots = document.createElement('div');
-      dots.className = 'skill-dots';
+      const row = document.createElement('div'); row.className = 'skill-row';
+      const name = document.createElement('span'); name.className = 'skill-name'; name.textContent = sk.n;
+      const dots = document.createElement('div'); dots.className = 'skill-dots';
       for (let i=1;i<=5;i++) {
-        const d = document.createElement('div');
-        d.className = 'dot';
-        d.style.background = cat.color;
-        d.style.opacity = i <= sk.v ? '1' : '0.15';
+        const d = document.createElement('div'); d.className = 'dot';
+        d.style.background = cat.color; d.style.opacity = i <= sk.v ? '1' : '0.15';
         dots.appendChild(d);
       }
-      row.appendChild(name);
-      row.appendChild(dots);
-      div.appendChild(row);
+      row.appendChild(name); row.appendChild(dots); div.appendChild(row);
     });
     el.appendChild(div);
   });
 })();
 
-// Active nav highlight on scroll
+// Active nav on scroll
 const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('nav a');
+const navLinks  = document.querySelectorAll('nav a');
 window.addEventListener('scroll', () => {
   let current = '';
   sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) current = s.id; });
-  navLinks.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#'+current);
-  });
+  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#'+current); });
 }, { passive: true });
 </script>
 </body>
