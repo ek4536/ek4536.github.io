@@ -31,7 +31,7 @@
       display: flex; gap: 2rem; padding: 1.2rem 5%;
     }
     nav a {
-      font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em;
+      font-size: 0.8rem; font-weight: 400; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--stone); text-decoration: none;
       transition: color 0.18s;
     }
@@ -51,16 +51,16 @@
       color: var(--ink); margin-bottom: 0.3rem;
     }
     .hero-role {
-      font-size: 0.8rem; color: var(--stone); margin-bottom: 1.6rem;
+      font-size: 0.9rem; color: var(--stone); margin-bottom: 1.6rem;
       letter-spacing: 0.02em;
     }
     .hero-bio {
-      font-size: 0.91rem; color: #374151; line-height: 1.78;
-      margin-bottom: 0.85rem;
+      font-size: 1rem; color: #374151; line-height: 1.78;
+      margin-bottom: 0.9rem;
     }
     .btns { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.7rem; }
     .btn {
-      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.06em;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em;
       text-transform: uppercase; text-decoration: none;
       padding: 0.58rem 1.25rem; border-radius: 3px; transition: all 0.16s;
     }
@@ -75,8 +75,8 @@
       background: var(--cream); border: 1px solid var(--border);
       border-radius: 4px; overflow: hidden; position: relative;
     }
-    .map-card      { flex: 3; }
-    .timeline-card { flex: 1.4; }
+    .map-card      { flex: 1; }
+    .timeline-card { flex: 1; }
     .viz-card svg  { display: block; width: 100%; }
     .tip {
       position: absolute; pointer-events: none; opacity: 0;
@@ -89,12 +89,12 @@
       display: flex; gap: 1.6rem; padding: 0.7rem 1rem;
       border-bottom: 1px solid var(--border);
     }
-    .leg { display: flex; align-items: center; gap: 0.38rem; font-size: 0.71rem; color: var(--stone); }
+    .leg { display: flex; align-items: center; gap: 0.38rem; font-size: 0.8rem; color: var(--stone); }
     .leg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
     /* PROJECTS */
     .section-label {
-      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.16em;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.16em;
       text-transform: uppercase; color: var(--fern); margin-bottom: 1.4rem;
     }
     .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1rem; }
@@ -104,33 +104,34 @@
       transition: box-shadow 0.18s, transform 0.14s;
     }
     .card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.07); transform: translateY(-2px); }
-    .card-date { font-size: 0.62rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
-    .card h3 { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-bottom: 0.42rem; line-height: 1.35; }
-    .card p { font-size: 0.81rem; color: #4b5563; line-height: 1.65; flex: 1; margin-bottom: 0.85rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-bottom: 0.75rem; }
-    .tag { font-size: 0.61rem; font-weight: 500; background: #f3f4f6; border: 1px solid #e5e7eb; color: #4b5563; padding: 0.1rem 0.38rem; border-radius: 2px; }
-    .badge { font-size: 0.61rem; font-weight: 500; background: #fef9c3; border: 1px solid #fde047; color: #713f12; padding: 0.1rem 0.38rem; border-radius: 2px; margin-bottom: 0.4rem; display: inline-block; }
-    .card-link { font-size: 0.7rem; font-weight: 500; color: var(--moss); text-decoration: none; }
+    .card-date { font-size: 0.7rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .card h3 { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.45rem; line-height: 1.35; }
+    .card p { font-size: 0.9rem; color: #4b5563; line-height: 1.7; flex: 1; margin-bottom: 0.9rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.8rem; }
+    .tag { font-size: 0.7rem; font-weight: 500; background: #f3f4f6; border: 1px solid #e5e7eb; color: #4b5563; padding: 0.15rem 0.45rem; border-radius: 2px; }
+    .badge { font-size: 0.7rem; font-weight: 500; background: #fef9c3; border: 1px solid #fde047; color: #713f12; padding: 0.15rem 0.45rem; border-radius: 2px; margin-bottom: 0.45rem; display: inline-block; }
+    .card-link { font-size: 0.78rem; font-weight: 500; color: var(--moss); text-decoration: none; }
     .card-link:hover { color: var(--forest); text-decoration: underline; }
 
     /* SKILLS */
-    .skills-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
-    .skill-cat { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.3rem; }
-    .skill-cat-title { font-size: 0.61rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.85rem; }
-    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.26rem 0; border-bottom: 1px solid var(--border); }
+    .skills-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0 2rem; }
+    .skill-cat { padding: 0.6rem 0; border-right: 1px solid var(--border); padding-right: 2rem; }
+    .skill-cat:last-child { border-right: none; }
+    .skill-cat-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.9rem; }
+    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.32rem 0; border-bottom: 1px solid var(--border); }
     .skill-row:last-child { border-bottom: none; }
-    .skill-name { font-size: 0.78rem; color: var(--ink); }
+    .skill-name { font-size: 0.88rem; color: var(--ink); }
     .skill-dots { display: flex; gap: 3px; }
     .dot { width: 5px; height: 5px; border-radius: 50%; }
 
     /* CONTACT */
     #contact { min-height: 50vh; }
-    h2 { font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: 1.6rem; letter-spacing: -0.01em; }
+    h2 { font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 1.6rem; letter-spacing: -0.01em; }
     .contact-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; }
-    .contact-links a { font-size: 0.79rem; color: var(--moss); text-decoration: none; }
+    .contact-links a { font-size: 0.9rem; color: var(--moss); text-decoration: none; }
     .contact-links a:hover { color: var(--forest); text-decoration: underline; }
 
-    footer { padding: 1.6rem 5%; font-size: 0.67rem; color: var(--stone); border-top: 1px solid var(--border); }
+    footer { padding: 1.6rem 5%; font-size: 0.75rem; color: var(--stone); border-top: 1px solid var(--border); }
 
     @media (max-width: 700px) {
       .viz-row { flex-direction: column; }
@@ -170,7 +171,7 @@
         <div class="leg"><div class="leg-dot" style="background:var(--nyc)"></div>New York — Urban Data Science</div>
       </div>
       <div class="tip" id="map-tip"></div>
-      <svg id="world-map" viewBox="0 0 800 280"></svg>
+      <svg id="world-map" viewBox="0 0 800 340"></svg>
     </div>
     <div class="viz-card timeline-card">
       <svg id="timeline" viewBox="0 0 300 420"></svg>
@@ -242,7 +243,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
 // ── WORLD MAP ──────────────────────────────────────────
 (async function() {
-  const W = 800, H = 280;
+  const W = 800, H = 340;
   const svg = d3.select('#world-map');
   const tip = d3.select('#map-tip');
 
@@ -297,7 +298,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
     const lx = i === 0 ? cx - 9 : cx + 9;
     g.append('text').attr('x',lx).attr('y',cy - 9)
       .attr('text-anchor', c.anchor)
-      .attr('font-family','Inter,sans-serif').attr('font-size','10px')
+      .attr('font-family','Inter,sans-serif').attr('font-size','14px')
       .attr('font-weight','500').attr('fill',c.color).attr('opacity',0)
       .text(c.name)
       .transition().duration(300).delay(delay+180).attr('opacity',1);
@@ -339,11 +340,11 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
   const nowY = y(NOW);
 
   // Track labels
-  g.append('text').attr('x', SPINE - 9).attr('y', 16).attr('text-anchor','end')
-    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
+  g.append('text').attr('x', SPINE - 9).attr('y', 18).attr('text-anchor','end')
+    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('font-weight','600')
     .attr('fill', ST).attr('letter-spacing','0.08em').text('EDUCATION');
-  g.append('text').attr('x', SPINE + 9).attr('y', 16).attr('text-anchor','start')
-    .attr('font-family','Inter,sans-serif').attr('font-size','8px').attr('font-weight','600')
+  g.append('text').attr('x', SPINE + 9).attr('y', 18).attr('text-anchor','start')
+    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('font-weight','600')
     .attr('fill', ST).attr('letter-spacing','0.08em').text('WORK');
 
   // Spine — animates downward
@@ -354,7 +355,7 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
 
   // "now" marker
   g.append('text').attr('x', SPINE + 5).attr('y', nowY + 4)
-    .attr('font-family','Inter,sans-serif').attr('font-size','7.5px').attr('fill','#9ca3af')
+    .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#9ca3af')
     .attr('opacity', 0).text('now')
     .transition().duration(300).delay(1200).attr('opacity', 1);
 
@@ -363,9 +364,9 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
     const gy = y(new Date(yr, 0));
     g.append('line').attr('x1', SPINE-4).attr('x2', SPINE+4)
       .attr('y1', gy).attr('y2', gy).attr('stroke','#d1d5db').attr('stroke-width', 1);
-    g.append('text').attr('x', SPINE - 8).attr('y', gy + 3.5)
+    g.append('text').attr('x', SPINE - 8).attr('y', gy + 4)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','7.5px').attr('fill','#9ca3af').text(yr);
+      .attr('font-size','10px').attr('fill','#9ca3af').text(yr);
   });
 
   // EDUCATION events — dots on spine, labels to the left (right-anchored)
@@ -381,13 +382,13 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
       .attr('fill', ev.color).attr('stroke','#fff').attr('stroke-width', 1.5)
       .transition().duration(240).delay(delay).attr('r', 4.5);
     const tg = g.append('g').attr('opacity', 0);
-    tg.append('text').attr('x', SPINE - 10).attr('y', ey - 2)
+    tg.append('text').attr('x', SPINE - 10).attr('y', ey - 3)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','9px').attr('font-weight','500').attr('fill', ev.color)
+      .attr('font-size','11px').attr('font-weight','500').attr('fill', ev.color)
       .text(ev.name);
-    tg.append('text').attr('x', SPINE - 10).attr('y', ey + 10)
+    tg.append('text').attr('x', SPINE - 10).attr('y', ey + 11)
       .attr('text-anchor','end').attr('font-family','Inter,sans-serif')
-      .attr('font-size','8px').attr('fill', ST)
+      .attr('font-size','10px').attr('fill', ST)
       .text(ev.sub);
     tg.transition().duration(260).delay(delay + 200).attr('opacity', 1);
   });
@@ -410,13 +411,13 @@ const SC = '#b45309', NC = '#2d6a4f', ST = '#6b7280', BD = '#e5e7eb';
       .attr('fill', ph.color).attr('stroke','#fff').attr('stroke-width', 1.5)
       .transition().duration(220).delay(delay).attr('r', 4);
     const tg = g.append('g').attr('opacity', 0);
-    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 1)
+    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 2)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','9px').attr('font-weight','500').attr('fill', ph.color)
+      .attr('font-size','11px').attr('font-weight','500').attr('fill', ph.color)
       .text(ph.name);
-    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 13)
+    tg.append('text').attr('x', SPINE + 16).attr('y', y1 + 16)
       .attr('text-anchor','start').attr('font-family','Inter,sans-serif')
-      .attr('font-size','8px').attr('fill', ST)
+      .attr('font-size','10px').attr('fill', ST)
       .text(ph.sub);
     tg.transition().duration(260).delay(delay + 300).attr('opacity', 1);
   });
